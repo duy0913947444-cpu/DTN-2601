@@ -11,6 +11,22 @@ public class Position {
         PositionName = positionName;
     }
 
+    public int getPositionID() {
+        return PositionID;
+    }
+
+    public void setPositionID(int positionID) {
+        PositionID = positionID;
+    }
+
+    public Entities.PositionName getPositionName() {
+        return PositionName;
+    }
+
+    public void setPositionName(Entities.PositionName positionName) {
+        PositionName = positionName;
+    }
+
     @Override
     public String toString() {
         return "Entities.Position{" +
