@@ -32,4 +32,40 @@ public class Exercise3 {
         String formattedDate = exam.getCreateDate().format(formatter);
         System.out.println("Ngày tạo: " + formattedDate);
     }
+    public static void question3(Exam exam){
+        System.out.println(exam.getExamID());
+        System.out.println(exam.getCode());
+        System.out.println(exam.getCategoryQuestion());
+        System.out.println(exam.getTitle());
+        System.out.println(exam.getCreator());
+        System.out.println(exam.getDuration());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy",
+                new Locale("vi", "VN"));
+        String formattedDate = exam.getCreateDate().format(formatter);
+        System.out.println("Ngày tạo: " + formattedDate);
+    }
+    public static void question4(Exam exam){
+        System.out.println(exam.getExamID());
+        System.out.println(exam.getCode());
+        System.out.println(exam.getCategoryQuestion());
+        System.out.println(exam.getTitle());
+        System.out.println(exam.getCreator());
+        System.out.println(exam.getDuration());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-yyyy",
+                new Locale("vi", "VN"));
+        String formattedDate = exam.getCreateDate().format(formatter);
+        System.out.println("Ngày tạo: " + formattedDate);
+    }
+    public static void question5(Exam exam){
+        System.out.println(exam.getExamID());
+        System.out.println(exam.getCode());
+        System.out.println(exam.getCategoryQuestion());
+        System.out.println(exam.getTitle());
+        System.out.println(exam.getCreator());
+        System.out.println(exam.getDuration());
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MM-dd",
+                new Locale("vi", "VN"));
+        String formattedDate = exam.getCreateDate().format(formatter);
+        System.out.println("Ngày tạo: " + formattedDate);
+    }
 }

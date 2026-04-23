@@ -12,6 +12,9 @@ public class Account {
     LocalDate createDate;
     //Constructor
 
+    public Account() {
+    }
+
     public Account(String email, String userName, String fullname, Department department, Position position, LocalDate createDate) {
         this.accountID++;
         this.email = email;

@@ -6,6 +6,9 @@ public class Position {
 
     //Constructor
 
+    public Position() {
+    }
+
     public Position(PositionName positionName) {
         PositionID++;
         PositionName = positionName;

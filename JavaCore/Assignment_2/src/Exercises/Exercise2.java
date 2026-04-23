@@ -6,7 +6,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Scanner;
 
-public class Excercise2 {
+public class Exercise2 {
     public static void questiopn1(){
         int number = 5;
         System.out.printf("%d\n", number);

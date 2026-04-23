@@ -1,7 +1,5 @@
 import Entities.*;
-import Exercises.Excercise2;
-import Exercises.Exercise1;
-import Exercises.Exercise3;
+import Exercises.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -83,14 +81,43 @@ public class Main {
         Exercise1.question15();
         System.out.println("//========================================================//");
         //Exercise 2
-        Excercise2.questiopn1();
-        Excercise2.questiopn2();
-        Excercise2.questiopn3();
-        Excercise2.questiopn4();
-        Excercise2.questiopn5();
-        Excercise2.questiopn6(accounts);
+        Exercise2.questiopn1();
+        Exercise2.questiopn2();
+        Exercise2.questiopn3();
+        Exercise2.questiopn4();
+        Exercise2.questiopn5();
+        Exercise2.questiopn6(accounts);
+        System.out.println("//========================================================//");
         //Exercise 3
         Exercise3.question1(exams[1]);
         Exercise3.question2(exams[2]);
+        Exercise3.question3(exams[0]);
+        Exercise3.question4(exams[1]);
+        Exercise3.question5(exams[2]);
+        System.out.println("//========================================================//");
+        // Exercise 4
+        System.out.println(Exercise4.question1());
+        System.out.println(Exercise4.question2());
+        Exercise4.question3();
+        Exercise4.question4();
+        Exercise4.question5();
+        Exercise4.question6();
+        Exercise4.question7();
+        System.out.println("//========================================================//");
+        // Exercise 5
+        Exercise5.question1();
+        Exercise5.quesiton2();
+        Exercise5.question3();
+        Exercise5.question4();
+        Account account = Exercise5.question5();
+        Department department = Exercise5.question6();
+        Exercise5.question7();
+        Exercise5.question8();
+        Exercise5.question10(accounts,groups);
+        System.out.println("//========================================================//");
+        //Exercise 6
+        Exercise6.question1();
+        Exercise6.question2(accounts);
+        Exercise6.question3();
     }
 }

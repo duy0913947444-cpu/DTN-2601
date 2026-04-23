@@ -6,6 +6,9 @@ public class Department {
 
     //Constructor
 
+    public Department() {
+    }
+
     public Department(String departmentName) {
         this.departmentID++;
         this.departmentName = departmentName;
