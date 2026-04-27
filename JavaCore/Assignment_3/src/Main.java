@@ -1,8 +1,15 @@
 import Entities.*;
-import Exercises.*;
+import Exercises.Exercise1;
+import Exercises.Exercise2;
+import Exercises.Exercise3;
+import Exercises.Exercise4;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Objects;
+import java.util.Scanner;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
 // click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
@@ -20,10 +27,11 @@ public class Main {
         accounts[0] = new Account("user1@gmail.com", "user1", "Nguyen van A", departments[0], positions[0], LocalDate.now());
         accounts[1] = new Account("user2@gmail.com", "user2", "Nguyen van B", departments[1], positions[1], LocalDate.now());
         accounts[2] = new Account("user3@gmail.com", "user3", "Nguyen van C", departments[2], positions[2], LocalDate.now());
-        Group[] groups = new Group[3];
+        Group[] groups = new Group[4];
         groups[0] = new Group("group1", accounts[0], LocalDate.now());
         groups[1] = new Group("group2", accounts[1], LocalDate.now());
         groups[2] = new Group("group3", accounts[2], LocalDate.now());
+        groups[3] = new Group("JavaBackend", accounts[2], LocalDate.now());
         GroupAccount[] groupAccounts = new GroupAccount[3];
         groupAccounts[0] = new GroupAccount(groups[0], accounts[0], LocalDate.now());
         groupAccounts[1] = new GroupAccount(groups[1], accounts[1], LocalDate.now());
@@ -52,72 +60,55 @@ public class Main {
         examQuestions[0] = new ExamQuestion(exams[0], questions[0]);
         examQuestions[1] = new ExamQuestion(exams[1], questions[1]);
         examQuestions[2] = new ExamQuestion(exams[2], questions[2]);
-        System.out.println(departments[0]);
-        System.out.println(positions[0]);
-        System.out.println(accounts[0]);
-        System.out.println(groups[0]);
-        System.out.println(groupAccounts[0]);
-        System.out.println(typeQuestions[0]);
-        System.out.println(categoryQuestions[0]);
-        System.out.println(questions[0]);
-        System.out.println(answers[0]);
-        System.out.println(exams[0]);
-        System.out.println(examQuestions[0]);
-        // Excercise 1
-        Exercise1.checkDepartment(accounts[2]);
-        Exercise1.question2(accounts[2],groupAccounts);
-        Exercise1.question3(accounts[2]);
-        Exercise1.question4(accounts[2]);
-        Exercise1.question5(groups[0],groupAccounts);
-        Exercise1.question6(accounts[0],groupAccounts);
-        Exercise1.question7(accounts[1]);
-        Exercise1.question8(accounts);
-        Exercise1.question9(departments);
-        Exercise1.question10(accounts);
-        Exercise1.question11(departments);
-        Exercise1.question12(departments);
-        Exercise1.question13(accounts);
-        Exercise1.question14(accounts);
-        Exercise1.question15();
-        System.out.println("//========================================================//");
-        //Exercise 2
-        Exercise2.questiopn1();
-        Exercise2.questiopn2();
-        Exercise2.questiopn3();
-        Exercise2.questiopn4();
-        Exercise2.questiopn5();
-        Exercise2.questiopn6(accounts);
-        System.out.println("//========================================================//");
-        //Exercise 3
-        Exercise3.question1(exams[1]);
-        Exercise3.question2(exams[2]);
-        Exercise3.question3(exams[0]);
-        Exercise3.question4(exams[1]);
-        Exercise3.question5(exams[2]);
-        System.out.println("//========================================================//");
-        // Exercise 4
-        System.out.println(Exercise4.question1());
-        System.out.println(Exercise4.question2());
-        Exercise4.question3();
-        Exercise4.question4();
+        //Excercise 1
+        Exercise1.question1(accounts[0],5240.5f);
+        System.out.printf("salary Account 1: %d$\n", accounts[0].getSalary());
+        Exercise1.question1(accounts[1],10970.055f);
+        System.out.printf("salary Account 2: %d$\n", accounts[1].getSalary());
+        int number = Exercise1.question2();
+        System.out.printf("Radom 5 chu so: %05d\n", number);
+        System.out.printf("%02d\n",Exercise1.question3(number));
+        System.out.println(Exercise1.question4(3,6));
+        List<Account> accountList = new ArrayList<>(Exercise2.question1());
+        for(Account account: accountList){
+            System.out.println(account);
+        }
+        Exercise3.question1();
+        System.out.println(Exercise3.question2());
+        System.out.println(Exercise3.question3());
+        Scanner sc = new Scanner(System.in);
+        String s1;
+        System.out.println("Nhap s:");
+        s1 = sc.nextLine();
+        System.out.println(Exercise4.question1(s1));
+        String s2,s3;
+        System.out.println("Nhap s2,s3: ");
+        s2 = sc.nextLine();
+        s3 = sc.nextLine();
+        System.out.println(Exercise4.question2(s2,s3));
+        System.out.println("Nhap ho ten: ");
+        String name = sc.nextLine();
+        System.out.println(Exercise4.question3(name));
+        System.out.println("Question 4, nhap ten: ");
+        String name1 = sc.nextLine();
+        Exercise4.question4(name1);
         Exercise4.question5();
-        Exercise4.question6();
-        Exercise4.question7();
-        System.out.println("//========================================================//");
-        // Exercise 5
-        Exercise5.question1();
-        Exercise5.quesiton2();
-        Exercise5.question3();
-        Exercise5.question4();
-        Account account = Exercise5.question5();
-        Department department = Exercise5.question6();
-        Exercise5.question7();
-        Exercise5.question8();
-        Exercise5.question10(accounts,groups);
-        System.out.println("//========================================================//");
-        //Exercise 6
-        Exercise6.question1();
-        Exercise6.question2(accounts);
-        Exercise6.question3();
+        Exercise4.question6(name1);
+        Exercise4.question8(List.of(groups));
+        System.out.println(Exercise4.question10("ok","KO"));
+        System.out.println(Exercise4.question11("nguyen van a"));
+        Exercise4.question12("nguyen van a");
+        System.out.println();
+        System.out.println(Exercise4.question14("VTI Academy",'e','*'));
+        Exercise4.question15("nguyen van a");
+        System.out.println();
+        List<String> subString = Exercise4.question16("nguyen van a",4);
+        if(Objects.isNull(subString)){
+            System.out.println("KO");
+        }else{
+            for(String s: subString){
+                System.out.println(s);
+            }
+        }
     }
 }

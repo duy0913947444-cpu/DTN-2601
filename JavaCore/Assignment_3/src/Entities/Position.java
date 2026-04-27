@@ -22,11 +22,11 @@ public class Position {
         this.positionID = positionID;
     }
 
-    public Entities.PositionName getPositionName() {
+    public PositionName getPositionName() {
         return positionName;
     }
 
-    public void setPositionName(Entities.PositionName positionName) {
+    public void setPositionName(PositionName positionName) {
         this.positionName = positionName;
     }
 

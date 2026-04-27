@@ -2,12 +2,14 @@ package Exercises;
 
 import Entities.*;
 
+import java.util.Objects;
+
 import static Entities.PositionName.DEV;
 
 public class Exercise1 {
     public static void checkDepartment(Account account) {
         Department department = account.getDepartment();
-        if (account.getDepartment() == null) {
+        if (Objects.isNull(account)) {
             System.out.println("NV ch co phong ban");
         } else {
             System.out.println("Phong ban nv: " + department.getDepartmentName());
@@ -15,15 +17,12 @@ public class Exercise1 {
     }
 
     public static void question2(Account account, GroupAccount[] groupAccounts) {
+        if(Objects.isNull(account)) return;
+        if(Objects.isNull(groupAccounts)) return;
         int count = 0;
         for (GroupAccount groupAccount : groupAccounts) {
             if (groupAccount.getAccount() == account) {
-                if (groupAccount.getGroup() == null) {
-                    System.out.println("NV ch co group");
-                    return;
-                } else {
-                    count++;
-                }
+                count++;
             }
         }
         if (count < 3) {

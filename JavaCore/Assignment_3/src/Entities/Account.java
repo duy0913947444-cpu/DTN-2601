@@ -3,26 +3,46 @@ package Entities;
 import java.time.LocalDate;
 
 public class Account {
-    int accountID;
-    String email;
-    String userName;
-    String fullname;
-    Department department;
-    Position position;
-    LocalDate createDate;
+    private int accountID;
+    private String email;
+    private String userName;
+    private String fullname;
+    private Department department;
+    private Position position;
+    private LocalDate createDate;
+    private int salary;
     //Constructor
 
-    public Account() {
+    public Account(String mail, String user1, String nguyenVanA, Department department, Position position, LocalDate now) {
     }
 
-    public Account(String email, String userName, String fullname, Department department, Position position, LocalDate createDate) {
-        this.accountID++;
+    public Account(int accountID, String email, String userName, String fullname, Department department, Position position, LocalDate createDate, int salary) {
+        this.accountID = accountID;
         this.email = email;
         this.userName = userName;
         this.fullname = fullname;
         this.department = department;
         this.position = position;
         this.createDate = createDate;
+        this.salary = salary;
+    }
+
+    public Account() {
+        this.accountID = accountID;
+        this.email = email;
+        this.userName = userName;
+        this.fullname = fullname;
+        this.department = department;
+        this.position = position;
+        this.createDate = createDate;
+    }
+
+    public int getSalary() {
+        return salary;
+    }
+
+    public void setSalary(int salary) {
+        this.salary = salary;
     }
 
     public int getAccountID() {

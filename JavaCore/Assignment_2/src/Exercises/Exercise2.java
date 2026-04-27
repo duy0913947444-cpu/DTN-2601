@@ -35,7 +35,7 @@ public class Exercise2 {
         System.out.printf("%-20s %-20s %-15s%n", "Email", "Full name", "Department name");
         System.out.println("-------------------------------------------------------------");
         for(Account account: accounts){
-            System.out.printf("%-20s %-20s %-15s%n", account.getEmail(), account.getFullname()
+            System.out.printf("|%-20s|%-20s|%-15s|\n", account.getEmail(), account.getFullname()
                     , account.getDepartment().getDepartmentName());
         }
     }
