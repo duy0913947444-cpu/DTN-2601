@@ -16,7 +16,7 @@ public class Exercise5 {
         }
     }
     public static boolean question4(Department department){
-        return department.getDepartmentName().equals("Phòng A");
+        return "Phòng A".equals(department.getDepartmentName());
     }
     public static boolean question5(Department department1, Department department2){
         return department1.equals(department2);

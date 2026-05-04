@@ -27,12 +27,14 @@ public class Exercise4 {
     public static String question3(String name) {
         if (Objects.isNull(name) || name.equals("")) return null;
         name = name.trim().toLowerCase();
-        String[] subStrings = name.split(" ");
+        String[] subStrings = name.split("\\s+");
         name = "";
         for (String subString : subStrings) {
-            String firstLetter = String.valueOf(Character.toUpperCase(subString.charAt(0)));
-            subString = firstLetter + subString.substring(1, subString.length());
-            name += subString + " ";
+//            String firstLetter = String.valueOf(Character.toUpperCase(subString.charAt(0)));
+//            subString = firstLetter + subString.substring(1);
+            StringBuilder sb = new StringBuilder(subString);
+            sb.replace(0,1,String.valueOf(Character.toUpperCase(sb.charAt(0))));
+            name += sb + " ";
         }
         return name.trim();
     }
@@ -90,7 +92,6 @@ public class Exercise4 {
                 System.out.println(groups.get(i));
         }
     }
-
     public static boolean question10(String s1, String s2) {
         StringBuilder sb1 = new StringBuilder(s1.trim().toLowerCase());
         return sb1.reverse().toString().equals(s2.trim().toLowerCase());
@@ -131,31 +132,17 @@ public class Exercise4 {
 
     public static void question15(String s) {
         if (Objects.isNull(s) || s.equals("") || s.equals(" ")) return;
-        String[] subString = s.trim().split(" ");
+        String[] subString = s.trim().split("\\s+");
         for (int i = subString.length -1; i >= 0 ; i--) {
             System.out.print(subString[i] + " ");
         }
     }
     public static List<String> question16(String s, int n){
         if (Objects.isNull(s) || s.equals("") || s.equals(" ")) return null;
-        if(s.length()%n != 0) return null;
         List<String> subString = new ArrayList<>();
-        int preIndex = 0;
-        for(int i = n; i <= s.length(); i+=n){
-            if(i == n){
-                String temp = "";
-                for(int j = 0; j < i; j++){
-                    temp += String.valueOf(s.charAt(j));
-                }
-                subString.add(temp);
-            }else{
-                String temp = "";
-                for(int j = preIndex; j < i; j++){
-                    temp += String.valueOf(s.charAt(j));
-                }
-                subString.add(temp);
-            }
-            preIndex = i;
+        if(s.length()%n != 0) return null;
+        for(int i = 0; i < s.length(); i+=n){
+            System.out.println(s.substring(i,i+n));
         }
         return subString;
     }
