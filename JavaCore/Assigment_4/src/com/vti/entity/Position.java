@@ -1,6 +1,6 @@
 package com.vti.entity;
 
-import Enums.PositionName;
+import com.vti.Enums.PositionName;
 
 public class Position {
     private int positionID;
