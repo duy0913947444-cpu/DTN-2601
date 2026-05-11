@@ -7,8 +7,8 @@ public class Account {
     private String email;
     private String user;
     private String fullName;
-    private int departmentId;
-    private int positionId;
+    private Department department;
+    private Position position;
     private LocalDate date;
 
     public int getAccountId() {
@@ -43,20 +43,20 @@ public class Account {
         this.fullName = fullName;
     }
 
-    public int getDepartmentId() {
-        return departmentId;
+    public Department getDepartment() {
+        return department;
     }
 
-    public void setDepartmentId(int departmentId) {
-        this.departmentId = departmentId;
+    public void setDepartment(Department department) {
+        this.department = department;
     }
 
-    public int getPositionId() {
-        return positionId;
+    public Position getPosition() {
+        return position;
     }
 
-    public void setPositionId(int positionId) {
-        this.positionId = positionId;
+    public void setPosition(Position position) {
+        this.position = position;
     }
 
     public LocalDate getDate() {
@@ -74,8 +74,8 @@ public class Account {
                 ", email='" + email + '\'' +
                 ", user='" + user + '\'' +
                 ", fullName='" + fullName + '\'' +
-                ", departmentId=" + departmentId +
-                ", positionId=" + positionId +
+                ", department=" + department +
+                ", position=" + position +
                 ", date=" + date +
                 '}';
     }

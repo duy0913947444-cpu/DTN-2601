@@ -3,10 +3,12 @@ package com.vti.Backend;
 import com.vti.Entity.CanBo;
 import com.vti.Enums.Gender;
 import com.vti.Enums.Loai;
-import com.vti.Utils.Connection;
+import com.vti.Utils.JDBCConnection;
 
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,7 +16,9 @@ public class QuanLiCanBo {
     public static List<CanBo> getCanBo() throws SQLException, ClassNotFoundException {
         List<CanBo> canBoList = new ArrayList<>();
         String queryStatement = "select * from can_bo";
-        ResultSet resultSet = Connection.connectDB(queryStatement, "qlcb");
+        Connection connection = JDBCConnection.connectDB("qlcb");
+        Statement statement = connection.createStatement();
+        ResultSet resultSet = statement.executeQuery(queryStatement);
         CanBo canBo;
         while(resultSet.next()){
             canBo = new CanBo();
