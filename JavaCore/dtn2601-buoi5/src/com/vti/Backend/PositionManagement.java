@@ -59,24 +59,24 @@ public class PositionManagement {
         }
         return false;
     }
-    public static boolean deletePosition(PositionName positionName){
+    public static boolean deletePosition(int positionId){
         try{
             String disableUpdate = "SET SQL_SAFE_UPDATES = 0;";
             String queryStatement = "DELETE FROM `position`\n" +
-                    "WHERE position_name = ?";
+                    "WHERE position_id = ?";
             String queryStatementAccount = "DELETE FROM `account` \n" +
-                    "WHERE position_id = (SELECT position_id FROM `position` WHERE position_name = ? LIMIT 1)";
+                    "WHERE position_id = ?";
             Connection connection = JDBCConnection.connectDB("qlcb");
             //Set delete
             Statement statement = connection.createStatement();
             statement.executeUpdate(disableUpdate);
             //Delete account
             PreparedStatement preparedStatement2= connection.prepareStatement(queryStatementAccount);
-            preparedStatement2.setString(1,String.valueOf(positionName));
-            preparedStatement2.executeUpdate();
+            preparedStatement2.setInt(1,positionId);
+            System.out.println(preparedStatement2.executeUpdate());
             //Delete position
             PreparedStatement preparedStatement = connection.prepareStatement(queryStatement);
-            preparedStatement.setString(1,String.valueOf(positionName));
+            preparedStatement.setInt(1,positionId);
             int c = preparedStatement.executeUpdate();
             return c > 0;
         }catch (Exception e){

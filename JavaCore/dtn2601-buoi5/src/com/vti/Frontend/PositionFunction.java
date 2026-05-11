@@ -84,10 +84,10 @@ public class PositionFunction {
         }
     }
     public static void deletePosition(){
-        System.out.println("Nhap position name de xoa: 1.DEV, 2.TEST, 3.SCRUM_MASTER, other.PM");
-        String choose = sc.nextLine();
-        PositionName positionName = choosePositionName(choose);
-        boolean check = PositionManagement.deletePosition(positionName);
+        System.out.println("Nhap position ID de xoa: ");
+        int positionId = sc.nextInt();
+        sc.nextLine();
+        boolean check = PositionManagement.deletePosition(positionId);
         if(check){
             System.out.println("delete success!");
         }else{

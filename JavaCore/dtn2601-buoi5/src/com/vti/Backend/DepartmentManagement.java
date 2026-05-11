@@ -1,9 +1,13 @@
 package com.vti.Backend;
 
+import com.vti.Entity.Account;
 import com.vti.Entity.Department;
+import com.vti.Entity.Position;
+import com.vti.Enums.PositionName;
 import com.vti.Utils.JDBCConnection;
 
 import java.sql.*;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -63,17 +67,9 @@ public class DepartmentManagement {
             String disableUpdate = "SET SQL_SAFE_UPDATES = 0;";
             String queryStatement = "DELETE FROM `department`\n" +
                     "WHERE department_name = ?";
-            String queryStatementAccount = "DELETE FROM `account` \n" +
-                    "WHERE department_id = (SELECT department_id FROM `department` WHERE department_name = ?)";
             Connection connection = JDBCConnection.connectDB("qlcb");
-            //Set delete
             Statement statement = connection.createStatement();
             statement.executeUpdate(disableUpdate);
-            //Delete account
-            PreparedStatement preparedStatement2= connection.prepareStatement(queryStatementAccount);
-            preparedStatement2.setString(1,String.valueOf(departmentName));
-            preparedStatement2.executeUpdate();
-            //Delete department
             PreparedStatement preparedStatement = connection.prepareStatement(queryStatement);
             preparedStatement.setString(1,departmentName);
             int c = preparedStatement.executeUpdate();
