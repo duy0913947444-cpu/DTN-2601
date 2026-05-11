@@ -59,27 +59,35 @@ public class PositionManagement {
         }
         return false;
     }
-    public static boolean deletePosition(int positionId){
-        try{
-            String disableUpdate = "SET SQL_SAFE_UPDATES = 0;";
-            String queryStatement = "DELETE FROM `position`\n" +
-                    "WHERE position_id = ?";
-            String queryStatementAccount = "DELETE FROM `account` \n" +
-                    "WHERE position_id = ?";
-            Connection connection = JDBCConnection.connectDB("qlcb");
-            //Set delete
-            Statement statement = connection.createStatement();
-            statement.executeUpdate(disableUpdate);
-            //Delete account
-            PreparedStatement preparedStatement2= connection.prepareStatement(queryStatementAccount);
-            preparedStatement2.setInt(1,positionId);
-            System.out.println(preparedStatement2.executeUpdate());
-            //Delete position
-            PreparedStatement preparedStatement = connection.prepareStatement(queryStatement);
-            preparedStatement.setInt(1,positionId);
-            int c = preparedStatement.executeUpdate();
-            return c > 0;
-        }catch (Exception e){
+    public static boolean deletePosition(PositionName positionName) {
+        String getIdQuery    = "SELECT position_id FROM `position` WHERE position_name = ? LIMIT 1";
+        String deleteAccount = "DELETE FROM `account` WHERE position_id = ?";
+        String deletePosition = "DELETE FROM `position` WHERE position_id = ?";
+
+        try (Connection conn = JDBCConnection.connectDB("qlcb")) {
+            conn.setAutoCommit(false);
+
+            int positionId;
+            try (PreparedStatement ps = conn.prepareStatement(getIdQuery)) {
+                ps.setString(1, String.valueOf(positionName));
+                ResultSet rs = ps.executeQuery();
+                if (!rs.next()) return false;
+                positionId = rs.getInt("position_id");
+            }
+
+            try (PreparedStatement ps = conn.prepareStatement(deleteAccount)) {
+                ps.setInt(1, positionId);
+                ps.executeUpdate();
+            }
+
+            try (PreparedStatement ps = conn.prepareStatement(deletePosition)) {
+                ps.setInt(1, positionId);
+                int rows = ps.executeUpdate();
+                conn.commit();
+                return rows > 0;
+            }
+
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
