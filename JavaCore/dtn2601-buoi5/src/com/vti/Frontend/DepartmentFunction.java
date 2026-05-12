@@ -16,6 +16,8 @@ public class DepartmentFunction {
             System.out.println("3. Update department");
             System.out.println("4. Xoa department");
             System.out.println("5. Tim department theo ten");
+            System.out.println("6. Lay cac department nhiu account nhat");
+            System.out.println("7. Lay cac department it account nhat");
             System.out.println("Other. Exit");
             String choose = sc.nextLine();
             switch (choose){
@@ -33,6 +35,12 @@ public class DepartmentFunction {
                     break;
                 case "5":
                     findDepartmentByName();
+                    break;
+                case "6":
+                    getDepartmentMaxAccount();
+                    break;
+                case "7":
+                    getDepartmentSmallestAccount();
                     break;
                 default:
                     return;
@@ -86,6 +94,20 @@ public class DepartmentFunction {
             System.out.println("Not Found!");
             return;
         }
+        for(Department department: departmentList){
+            System.out.println(department);
+        }
+    }
+    public static void getDepartmentMaxAccount(){
+        List<Department> departmentList = DepartmentManagement.getDepartmentWithHighestAccount();
+        System.out.println("Department with highest account:");
+        for(Department department: departmentList){
+            System.out.println(department);
+        }
+    }
+    public static void getDepartmentSmallestAccount(){
+        List<Department> departmentList = DepartmentManagement.getDepartmentWithSmallestAccount();
+        System.out.println("Department with smallest account:");
         for(Department department: departmentList){
             System.out.println(department);
         }

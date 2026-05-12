@@ -1,6 +1,8 @@
 package com.vti.Frontend;
 
+import com.vti.Backend.DepartmentManagement;
 import com.vti.Backend.PositionManagement;
+import com.vti.Entity.Department;
 import com.vti.Entity.Position;
 import com.vti.Enums.PositionName;
 
@@ -17,6 +19,8 @@ public class PositionFunction {
             System.out.println("3. Update position");
             System.out.println("4. Xoa position");
             System.out.println("5. Tim position theo ten");
+            System.out.println("6. Tim position nhieu account nhat");
+            System.out.println("7. Tim position it account nhat");
             System.out.println("Other. Exit");
             String choose = sc.nextLine();
             switch (choose){
@@ -34,6 +38,12 @@ public class PositionFunction {
                     break;
                 case "5":
                     findPositionByName();
+                    break;
+                case "6":
+                    getPositionMaxAccount();
+                    break;
+                case "7":
+                    getPositionSmallestAccount();
                     break;
                 default:
                     return;
@@ -104,6 +114,20 @@ public class PositionFunction {
             return;
         }
         for(Position position: positionList){
+            System.out.println(position);
+        }
+    }
+    public static void getPositionMaxAccount(){
+        List<Position> positionList = PositionManagement.getPositionWithHighestAccount();
+        System.out.println("Postion with highest account:");
+        for(Position position : positionList){
+            System.out.println(position);
+        }
+    }
+    public static void getPositionSmallestAccount(){
+        List<Position> positionList = PositionManagement.getPositionWithHighestAccount();
+        System.out.println("Postion with smallest account:");
+        for(Position position : positionList){
             System.out.println(position);
         }
     }

@@ -1,4 +1,5 @@
 package com.vti.Backend;
+import com.vti.Entity.Department;
 import com.vti.Entity.Position;
 import com.vti.Enums.PositionName;
 import com.vti.Utils.JDBCConnection;
@@ -110,6 +111,78 @@ public class PositionManagement {
                 result.add(position);
             }
             return result;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public static List<Position> getPositionWithHighestAccount(){
+        List<Position> positionList = new ArrayList<>();
+        String subQuery = "select count(1)\n" +
+                "\t\t\t\t\tfrom `position` p\n" +
+                "\t\t\t\t\tjoin `account` a on a.position_id = p.position_id\n" +
+                "\t\t\t\t\tgroup by p.position_id\n" +
+                "\t\t\t\t\torder by count(1) desc\n" +
+                "\t\t\t\t\tlimit 1";
+        String query = "select p.*\n" +
+                "from `position` p\n" +
+                "join `account` a on a.position_id = p.position_id\n" +
+                "group by p.position_id\n" +
+                "having count(1) = ?";
+        try{
+            Connection connection = JDBCConnection.connectDB("qlcb");
+            //Subquery
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(subQuery);
+            if(!resultSet.next()) return null;
+            int count = resultSet.getInt("count(1)");
+            //Query
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1,count);
+            ResultSet rs = preparedStatement.executeQuery();
+            while(rs.next()){
+                Position position = new Position();
+                position.setPositionId(rs.getInt("position_id"));
+                position.setPositionName(PositionName.valueOf(rs.getString("position_name")));
+                positionList.add(position);
+            }
+            return positionList;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
+    public static List<Position> getPositionWithSmallestAccount(){
+        List<Position> positionList = new ArrayList<>();
+        String subQuery = "select count(1)\n" +
+                "\t\t\t\t\tfrom `position` p\n" +
+                "\t\t\t\t\tjoin `account` a on a.position_id = p.position_id\n" +
+                "\t\t\t\t\tgroup by p.position_id\n" +
+                "\t\t\t\t\torder by count(1)\n" +
+                "\t\t\t\t\tlimit 1";
+        String query = "select p.*\n" +
+                "from `position` p\n" +
+                "join `account` a on a.position_id = p.position_id\n" +
+                "group by p.position_id\n" +
+                "having count(1) = ?";
+        try{
+            Connection connection = JDBCConnection.connectDB("qlcb");
+            //Subquery
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(subQuery);
+            if(!resultSet.next()) return null;
+            int count = resultSet.getInt("count(1)");
+            //Query
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1,count);
+            ResultSet rs = preparedStatement.executeQuery();
+            while(rs.next()){
+                Position position = new Position();
+                position.setPositionId(rs.getInt("position_id"));
+                position.setPositionName(PositionName.valueOf(rs.getString("position_name")));
+                positionList.add(position);
+            }
+            return positionList;
         }catch(Exception e){
             e.printStackTrace();
         }

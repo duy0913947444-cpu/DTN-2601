@@ -114,4 +114,76 @@ public class DepartmentManagement {
         }
         return null;
     }
+    public static List<Department> getDepartmentWithHighestAccount(){
+        List<Department> departmentList = new ArrayList<>();
+        String subQuery = "select count(1)\n" +
+                "\t\t\t\t\tfrom `department` d\n" +
+                "\t\t\t\t\tjoin `account` a on a.department_id = d.department_id\n" +
+                "\t\t\t\t\tgroup by d.department_id\n" +
+                "\t\t\t\t\torder by count(1) desc\n" +
+                "\t\t\t\t\tlimit 1";
+        String query = "select d.*\n" +
+                "from `department` d\n" +
+                "join `account` a on a.department_id = d.department_id\n" +
+                "group by d.department_id\n" +
+                "having count(1) = ?";
+       try{
+           Connection connection = JDBCConnection.connectDB("qlcb");
+           //Subquery
+           Statement statement = connection.createStatement();
+           ResultSet resultSet = statement.executeQuery(subQuery);
+           if(!resultSet.next()) return null;
+           int count = resultSet.getInt("count(1)");
+           //Query
+           PreparedStatement preparedStatement = connection.prepareStatement(query);
+           preparedStatement.setInt(1,count);
+           ResultSet rs = preparedStatement.executeQuery();
+           while(rs.next()){
+               Department department = new Department();
+               department.setDepartmentId(rs.getInt("department_id"));
+               department.setDepartmentName(rs.getString("department_name"));
+               departmentList.add(department);
+           }
+           return departmentList;
+       }catch(Exception e){
+           e.printStackTrace();
+       }
+       return null;
+    }
+    public static List<Department> getDepartmentWithSmallestAccount(){
+        List<Department> departmentList = new ArrayList<>();
+        String subQuery = "select count(1)\n" +
+                "\t\t\t\t\tfrom `department` d\n" +
+                "\t\t\t\t\tjoin `account` a on a.department_id = d.department_id\n" +
+                "\t\t\t\t\tgroup by d.department_id\n" +
+                "\t\t\t\t\torder by count(1)\n" +
+                "\t\t\t\t\tlimit 1";
+        String query = "select d.*\n" +
+                "from `department` d\n" +
+                "join `account` a on a.department_id = d.department_id\n" +
+                "group by d.department_id\n" +
+                "having count(1) = ?";
+        try{
+            Connection connection = JDBCConnection.connectDB("qlcb");
+            //Subquery
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(subQuery);
+            if(!resultSet.next()) return null;
+            int count = resultSet.getInt("count(1)");
+            //Query
+            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement.setInt(1,count);
+            ResultSet rs = preparedStatement.executeQuery();
+            while(rs.next()){
+                Department department = new Department();
+                department.setDepartmentId(rs.getInt("department_id"));
+                department.setDepartmentName(rs.getString("department_name"));
+                departmentList.add(department);
+            }
+            return departmentList;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return null;
+    }
 }
