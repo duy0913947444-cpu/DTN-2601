@@ -11,8 +11,9 @@ import java.util.Scanner;
 public class PositionFunction {
     private Scanner sc = new Scanner(System.in);
     private PositionController positionController = new PositionController();
-    public void menu(){
-        do{
+
+    public void menu() {
+        do {
             System.out.println("Nhap chuc nang:");
             System.out.println("1. Show position");
             System.out.println("2. Them position");
@@ -23,7 +24,7 @@ public class PositionFunction {
             System.out.println("7. Tim position it account nhat");
             System.out.println("Other. Exit");
             String choose = sc.nextLine();
-            switch (choose){
+            switch (choose) {
                 case "1":
                     showPosition();
                     break;
@@ -48,16 +49,18 @@ public class PositionFunction {
                 default:
                     return;
             }
-        }while(true);
+        } while (true);
     }
-    public void showPosition(){
+
+    public void showPosition() {
         List<Position> positionList = positionController.getPosition();
-        for(Position position: positionList){
+        for (Position position : positionList) {
             System.out.println(position);
         }
     }
-    private PositionName choosePositionName(String choose){
-        switch (choose){
+
+    private PositionName choosePositionName(String choose) {
+        switch (choose) {
             case "1":
                 return PositionName.DEV;
             case "2":
@@ -68,66 +71,109 @@ public class PositionFunction {
                 return PositionName.PM;
         }
     }
-    public void createPosition(){
-        System.out.println("Nhap position name:     1.DEV, 2.TEST, 3.SCRUM_MASTER, other.PM");
-        String choose = sc.nextLine();
-        PositionName positionName = choosePositionName(choose);
+
+    public void createPosition() {
+        PositionName positionName;
+        do {
+            System.out.println("Nhap position name:     1.DEV, 2.TEST, 3.SCRUM_MASTER, other.PM");
+            String choose = sc.nextLine();
+            positionName = choosePositionName(choose);
+            if (!positionController.checkExistName(positionName, null)) {
+                break;
+            }
+            System.out.println("Position name was exist!");
+        } while (true);
         boolean check = positionController.createPosition(positionName);
-        if(check){
+        if (check) {
             System.out.println("insert success!");
-        }else{
+        } else {
             System.out.println("error!");
         }
     }
-    public void updatePosition(){
-        System.out.println("Nhap id position can update:");
-        int positionId = sc.nextInt();
-        sc.nextLine();
-        System.out.println("Nhap position name:     1.DEV, 2.TEST, 3.SCRUM_MASTER, other.PM");
-        String choose = sc.nextLine();
-        PositionName positionName = choosePositionName(choose);
+
+    public void updatePosition() {
+        int positionId;
+        PositionName positionName;
+        String choose;
+        do {
+            System.out.println("Nhap ID position can update:");
+            positionId = sc.nextInt();
+            sc.nextLine();
+            if (positionId < 0) {
+                System.out.println("Position ID ko hop le!");
+                continue;
+            }
+            if (positionController.checkExistID(positionId)) {
+                break;
+            }
+            System.out.println("ID not found!");
+        } while (true);
+        do {
+            System.out.println("Nhap position name:     1.DEV, 2.TEST, 3.SCRUM_MASTER, other.PM");
+            choose = sc.nextLine();
+            positionName = choosePositionName(choose);
+            if (!positionController.checkExistName(positionName, null)) {
+                break;
+            }
+            System.out.println("Position name was exist!");
+        } while (true);
         boolean check = positionController.updatePosition(positionName, positionId);
-        if(check){
+        if (check) {
             System.out.println("update success!");
-        }else{
+        } else {
             System.out.println("error!");
         }
     }
-    public void deletePosition(){
-        System.out.println("Nhap position name de xoa: 1.DEV, 2.TEST, 3.SCRUM_MASTER, other.PM");
-        String choose = sc.nextLine();
-        PositionName positionName = choosePositionName(choose);
-        boolean check = positionController.deletePosition(positionName);
-        if(check){
+
+    public void deletePosition() {
+        int positionID;
+        do {
+            System.out.println("Nhap ID position de xoa");
+            positionID = sc.nextInt();
+            sc.nextLine();
+            if (positionID < 0) {
+                System.out.println("Position ID ko hop le!");
+                continue;
+            }
+            if (positionController.checkExistID(positionID)) {
+                break;
+            }
+            System.out.println("ID not found!");
+        } while (true);
+        boolean check = positionController.deletePosition(positionID);
+        if (check) {
             System.out.println("delete success!");
-        }else{
+        } else {
             System.out.println("error!");
         }
     }
-    public void findPositionByName(){
+
+    public void findPositionByName() {
         System.out.println("Nhap position name can tim: 1.DEV, 2.TEST, 3.SCRUM_MASTER, other.PM");
         String choose = sc.nextLine();
         PositionName positionName = choosePositionName(choose);
         List<Position> positionList = positionController.findPositionByName(positionName);
-        if(positionList.isEmpty()){
+        if (positionList.isEmpty()) {
             System.out.println("Not Found");
             return;
         }
-        for(Position position: positionList){
+        for (Position position : positionList) {
             System.out.println(position);
         }
     }
-    public void getPositionMaxAccount(){
+
+    public void getPositionMaxAccount() {
         List<Position> positionList = positionController.getPositionWithHighestAccount();
         System.out.println("Postion with highest account:");
-        for(Position position : positionList){
+        for (Position position : positionList) {
             System.out.println(position);
         }
     }
-    public void getPositionSmallestAccount(){
+
+    public void getPositionSmallestAccount() {
         List<Position> positionList = positionController.getPositionWithHighestAccount();
         System.out.println("Postion with smallest account:");
-        for(Position position : positionList){
+        for (Position position : positionList) {
             System.out.println(position);
         }
     }

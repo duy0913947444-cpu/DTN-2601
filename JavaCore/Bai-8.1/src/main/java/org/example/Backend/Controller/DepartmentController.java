@@ -1,46 +1,48 @@
 package org.example.Backend.Controller;
 
-import org.example.Backend.Service.DepartmentServieImpl;
+import org.example.Backend.Service.Impl.DepartmentServieImpl;
 import org.example.Backend.Service.IDepartmentService;
 import org.example.Entity.Department;
 
 import java.util.List;
 
 public class DepartmentController {
+    private IDepartmentService departmentService = new DepartmentServieImpl();
 
-    public boolean deleteDepartment(String departmentName) {
-        IDepartmentService departmentService = new DepartmentServieImpl();
-        return departmentService.deleteDepartment(departmentName);
+    public boolean deleteDepartment(int departmentID) {
+        return departmentService.deleteDepartment(departmentID);
     }
 
 
     public boolean updateDepartment(String departmentName, int departmentId) {
-        IDepartmentService departmentService = new DepartmentServieImpl();
         return departmentService.updateDepartment(departmentName,departmentId);
     }
 
     public boolean createDepartment(String departmentName) {
-        IDepartmentService departmentService = new DepartmentServieImpl();
         return departmentService.createDepartment(departmentName);
     }
 
     public List<Department> getDepartment() {
-        IDepartmentService departmentService = new DepartmentServieImpl();
         return departmentService.getDepartment();
     }
 
     public List<Department> getDepartmentWithSmallestAccount() {
-        IDepartmentService departmentService = new DepartmentServieImpl();
         return departmentService.getDepartmentWithSmallestAccount();
     }
 
     public List<Department> getDepartmentWithHighestAccount() {
-        IDepartmentService departmentService = new DepartmentServieImpl();
         return departmentService.getDepartmentWithHighestAccount();
     }
 
     public List<Department> findDepartmentByName(String departmentName) {
-        IDepartmentService departmentService = new DepartmentServieImpl();
         return departmentService.findDepartmentByName(departmentName);
+    }
+
+    public boolean checkExistName(String departmentName, Integer ID) {
+        return departmentService.checkExistName(departmentName, ID);
+    }
+
+    public boolean checkExistID(int departmentID) {
+        return departmentService.checkExistID(departmentID);
     }
 }

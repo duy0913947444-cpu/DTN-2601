@@ -11,13 +11,26 @@ import java.util.Scanner;
 
 public class Utils {
     private static Scanner sc = new Scanner(System.in);
-    public static boolean checkString(String s){
-        return Objects.isNull(s) || s.isEmpty() || " ".equals(s);
-    }
     private AccountFunction accountFunction = new AccountFunction();
     private DepartmentFunction departmentFunction = new DepartmentFunction();
     private PositionFunction positionFunction = new PositionFunction();
 
+    public static boolean checkString(String s){
+        return Objects.isNull(s) || s.trim().isEmpty();
+    }
+
+    public static boolean checkEmail(String email){
+        if("@".equals(String.valueOf(email.charAt(0))) ||
+                "@".equals(String.valueOf(email.charAt(email.length()-1)))){
+            return false;
+        }
+        String[] strings = email.split("@");
+        if(strings.length == 2){
+            return true;
+        }else{
+            return false;
+        }
+    }
     public void menu(){
         do{
             System.out.println("Nhap chuc nang: ");

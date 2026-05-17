@@ -2,6 +2,7 @@ package org.example.Frontend;
 
 import org.example.Backend.Controller.DepartmentController;
 import org.example.Entity.Department;
+import org.example.Utils.Utils;
 
 import java.util.List;
 import java.util.Scanner;
@@ -55,8 +56,23 @@ public class DepartmentFunction {
         }
     }
     public void createDepartment(){
-        System.out.println("Nhap department name:");
-        String departmentName = sc.nextLine();
+        String departmentName;
+        do{
+            boolean check = true;
+            System.out.println("Nhap department name:");
+            departmentName = sc.nextLine();
+            //Check null, "" and " "
+            if(Utils.checkString(departmentName)){
+                System.out.println("Name was wrong!");
+                check = false;
+            }
+            //Check unique
+            if(departmentController.checkExistName(departmentName, null)){
+                System.out.println("Name was Exist!");
+                check = false;
+            }
+            if (check) break;
+        }while(true);
         boolean check = departmentController.createDepartment(departmentName);
         if(check){
             System.out.println("insert success!");
@@ -65,11 +81,36 @@ public class DepartmentFunction {
         }
     }
     public void updateDepartment(){
-        System.out.println("Nhap id department can update:");
-        int departmentId = sc.nextInt();
-        sc.nextLine();
-        System.out.println("Nhap department name:");
-        String departmentName = sc.nextLine();
+        int departmentId;
+        String departmentName;
+        do{
+            System.out.println("Nhap id department can update:");
+            departmentId = sc.nextInt();
+            sc.nextLine();
+            if(departmentId < 0){
+                System.out.println("ID khong hop le!");
+                continue;
+            }
+            if(departmentController.checkExistID(departmentId)){
+                break;
+            }else{
+                System.out.println("ID not found!");
+            }
+        }while(true);
+        do {
+            System.out.println("Nhap department name:");
+            departmentName = sc.nextLine();
+            if(Utils.checkString(departmentName)){
+                System.out.println("Department ko hop le!");
+                continue;
+            }
+            if(departmentController.checkExistName(departmentName,departmentId)){
+                System.out.println("Department name was exist!");
+            }else{
+                break;
+            }
+        }while(true);
+
         boolean check = departmentController.updateDepartment(departmentName,departmentId);
         if(check){
             System.out.println("update success!");
@@ -78,9 +119,22 @@ public class DepartmentFunction {
         }
     }
     public void deleteDepartment(){
-        System.out.println("Nhap department name de xoa: ");
-        String departmentName = sc.nextLine();
-        boolean check = departmentController.deleteDepartment(departmentName);
+        int departmentID;
+         do{
+            System.out.println("Nhap department id de xoa: ");
+            departmentID = sc.nextInt();
+            sc.nextLine();
+            if(departmentID < 0){
+                System.out.println("ID ko hop le");
+                continue;
+            }
+            if(departmentController.checkExistID(departmentID)){
+                break;
+            }else{
+                System.out.println("ID is not found!");
+            }
+        }while(true);
+        boolean check = departmentController.deleteDepartment(departmentID);
         if(check){
             System.out.println("delete success!");
         }else{

@@ -1,5 +1,6 @@
-package org.example.Backend.Repository;
+package org.example.Backend.Repository.Impl;
 
+import org.example.Backend.Repository.IAccountRepository;
 import org.example.Entity.Account;
 import org.example.Entity.Department;
 import org.example.Entity.Position;
@@ -17,7 +18,7 @@ import java.util.List;
 public class AccountRepositoryImpl implements IAccountRepository {
     @Override
     public List<Account> getAccount() {
-        try{
+        try {
             List<Account> accountList = new ArrayList<>();
             String queryStatement = "SELECT a.*, d.department_name, p.position_name\n" +
                     "FROM `account` a\n" +
@@ -27,7 +28,7 @@ public class AccountRepositoryImpl implements IAccountRepository {
             Statement statement = connection.createStatement();
             ResultSet resultSet = statement.executeQuery(queryStatement);
             Account account;
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 account = new Account();
                 account.setAccountId(resultSet.getInt("account_id"));
                 account.setEmail(resultSet.getString("email"));
@@ -45,52 +46,44 @@ public class AccountRepositoryImpl implements IAccountRepository {
                 accountList.add(account);
             }
             return accountList;
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
     @Override
-    public boolean updateAccount(String email, String userName, String fullName, int departmentId, int positionId, int accountId) {
-        try{
+    public boolean updateAccount(String userName, int accountId) {
+        try {
             String queryStatement = "update `account`\n" +
-                    "set email = ?\n" +
-                    ",user_name = ?,\n" +
-                    "full_name = ?,\n" +
-                    "department_id = ?,\n" +
-                    "position_id = ?\n" +
-                    "where account_id = ?";
+                    "set user_name = ?\n" +
+                    "where account_id = ?;";
             Connection connection = JDBCConnection.connectDB("qlcb");
             PreparedStatement preparedStatement = connection.prepareStatement(queryStatement);
-            preparedStatement.setString(1,email);
-            preparedStatement.setString(2,userName);
-            preparedStatement.setString(3,fullName);
-            preparedStatement.setInt(4,departmentId);
-            preparedStatement.setInt(5,positionId);
-            preparedStatement.setInt(6,accountId);
+            preparedStatement.setString(1, userName);
+            preparedStatement.setInt(2, accountId);
             int c = preparedStatement.executeUpdate();
             return c > 0;
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
     }
 
     @Override
-    public boolean deleteAccount(String userName) {
-        try{
+    public boolean deleteAccount(int accountID) {
+        try {
             String disableSafeUpdate = "SET SQL_SAFE_UPDATES = 0;";
             String queryStatement = "DELETE FROM `account`\n" +
-                    "WHERE user_name = ?";
+                    "WHERE account_id = ?";
             Connection connection = JDBCConnection.connectDB("qlcb");
             Statement statement = connection.createStatement();
             statement.executeUpdate(disableSafeUpdate);
             PreparedStatement preparedStatement = connection.prepareStatement(queryStatement);
-            preparedStatement.setString(1,userName);
+            preparedStatement.setInt(1, accountID);
             int c = preparedStatement.executeUpdate();
             return c > 0;
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
@@ -98,7 +91,7 @@ public class AccountRepositoryImpl implements IAccountRepository {
 
     @Override
     public List<Account> findAccountByUserName(String userName) {
-        try{
+        try {
             List<Account> result = new ArrayList<>();
             String queryStatement = "select a.*, d.department_name, p.position_name\n" +
                     "from `account` a\n" +
@@ -107,10 +100,10 @@ public class AccountRepositoryImpl implements IAccountRepository {
                     "where user_name = ?";
             Connection connection = JDBCConnection.connectDB("qlcb");
             PreparedStatement preparedStatement = connection.prepareStatement(queryStatement);
-            preparedStatement.setString(1,userName);
+            preparedStatement.setString(1, userName);
             ResultSet resultSet = preparedStatement.executeQuery();
             Account account;
-            while(resultSet.next()){
+            while (resultSet.next()) {
                 account = new Account();
                 account.setAccountId(resultSet.getInt("account_id"));
                 account.setEmail(resultSet.getString("email"));
@@ -128,7 +121,7 @@ public class AccountRepositoryImpl implements IAccountRepository {
                 result.add(account);
             }
             return result;
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
@@ -136,22 +129,64 @@ public class AccountRepositoryImpl implements IAccountRepository {
 
     @Override
     public boolean createAccount(String email, String userName, String fullName, int departmentId, int positionId, LocalDate createDate) {
-        try{
+        try {
             String queryStatement = "insert into `account`(email,user_name,full_name,department_id,position_id,create_date)\n" +
                     "value (?,?,?,?,?,?)";
             Connection connection = JDBCConnection.connectDB("qlcb");
             PreparedStatement preparedStatement = connection.prepareStatement(queryStatement);
-            preparedStatement.setString(1,email);
-            preparedStatement.setString(2,userName);
-            preparedStatement.setString(3,fullName);
-            preparedStatement.setInt(4,departmentId);
-            preparedStatement.setInt(5,positionId);
-            preparedStatement.setString(6,String.valueOf(createDate));
+            preparedStatement.setString(1, email);
+            preparedStatement.setString(2, userName);
+            preparedStatement.setString(3, fullName);
+            preparedStatement.setInt(4, departmentId);
+            preparedStatement.setInt(5, positionId);
+            preparedStatement.setString(6, String.valueOf(createDate));
             int c = preparedStatement.executeUpdate();
             return c > 0;
-        }catch(Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public boolean checkUnique(String nameCol, String noiDung) {
+        boolean check = true;
+        try {
+            String queryStatement = "Select * from `account` where 1=1 ";
+            if("email".equals(nameCol)){
+                queryStatement += " and email = ? ";
+            }else if("userName".equals(nameCol)){
+                queryStatement += " and user_name = ? ";
+            }
+            Connection connection = JDBCConnection.connectDB("qlcb");
+            PreparedStatement preparedStatement = connection.prepareStatement(queryStatement);
+
+            preparedStatement.setString(1, noiDung);
+
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) check = false;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return check;
+    }
+
+    @Override
+    public boolean checkExistID(int accountID) {
+        boolean check = false;
+        try{
+            String queryStatement = "Select * from `account` where account_id = ? ";
+
+            Connection connection = JDBCConnection.connectDB("qlcb");
+            PreparedStatement preparedStatement = connection.prepareStatement(queryStatement);
+
+            preparedStatement.setInt(1,accountID);
+
+            ResultSet rs = preparedStatement.executeQuery();
+            if(rs.next()) check = true;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return check;
     }
 }

@@ -2,7 +2,9 @@ package org.example.Frontend;
 
 import org.example.Backend.Controller.AccountController;
 import org.example.Backend.Controller.DepartmentController;
+import org.example.Backend.Controller.PositionController;
 import org.example.Entity.Account;
+import org.example.Utils.Utils;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -12,6 +14,8 @@ public class AccountFunction {
     private Scanner sc = new Scanner(System.in);
 
     private AccountController accountController = new AccountController();
+    private DepartmentController departmentController = new DepartmentController();
+    private PositionController positionController = new PositionController();
     public void menu(){
         do{
             System.out.println("Nhap chuc nang:");
@@ -50,18 +54,65 @@ public class AccountFunction {
         }
     }
     public void createAccount(){
-        System.out.println("Nhap email: ");
-        String email = sc.nextLine();
-        System.out.println("Nhap userName: ");
-        String userName = sc.nextLine();
-        System.out.println("Nhap full name: ");
-        String fullName = sc.nextLine();
-        System.out.println("Nhap department ID: ");
-        int departmentId = sc.nextInt();
-        sc.nextLine();
-        System.out.println("Nhap position ID: ");
-        int positionId = sc.nextInt();
-        sc.nextLine();
+        String email, userName, fullName;
+        int departmentId, positionId;
+        do{
+            System.out.println("Nhap email: ");
+            email = sc.nextLine();
+            if(Utils.checkEmail(email)){
+                if(accountController.checkUnique("email", email)){
+                    System.out.println("Success!");
+                    break;
+                }else{
+                    System.out.println("Email was exist!");
+                }
+            }else{
+                System.out.println("Email khong hop le!");
+            }
+        }while(true);
+        do{
+            System.out.println("Nhap userName: ");
+            userName = sc.nextLine();
+            if(!Utils.checkString(userName)){
+                if(accountController.checkUnique("userName",userName)){
+                    System.out.println("Success!");
+                    break;
+                }else{
+                    System.out.println("User name was exist!");
+                }
+            }else{
+                System.out.println("User name khong hop le!");
+            }
+        }while(true);
+        do{
+            System.out.println("Nhap full name: ");
+            fullName = sc.nextLine();
+            if(!Utils.checkString(fullName)){
+                break;
+            }else{
+                System.out.println("Ful name is not empty!");
+            }
+        }while(true);
+        do{
+            System.out.println("Nhap department ID: ");
+            departmentId = sc.nextInt();
+            sc.nextLine();
+            if(departmentController.checkExistID(departmentId)){
+                break;
+            }else{
+                System.out.println("Department id was not exist!");
+            }
+        }while(true);
+        do{
+            System.out.println("Nhap position ID: ");
+            positionId = sc.nextInt();
+            sc.nextLine();
+            if(positionController.checkExistID(positionId)){
+                break;
+            }else{
+                System.out.println("Position id was not exist!");
+            }
+        }while(true);
         boolean check = accountController.createAccount(email,userName,fullName,departmentId,positionId, LocalDate.now());
         if(check){
             System.out.println("insert success!");
@@ -70,22 +121,33 @@ public class AccountFunction {
         }
     }
     public void updateAccount(){
-        System.out.println("Nhap ID account can update: ");
-        int accountId = sc.nextInt();
-        sc.nextLine();
-        System.out.println("Nhap email: ");
-        String email = sc.nextLine();
-        System.out.println("Nhap userName: ");
-        String userName = sc.nextLine();
-        System.out.println("Nhap full name: ");
-        String fullName = sc.nextLine();
-        System.out.println("Nhap department ID: ");
-        int departmentId = sc.nextInt();
-        sc.nextLine();
-        System.out.println("Nhap position ID: ");
-        int positionId = sc.nextInt();
-        sc.nextLine();
-        boolean check = accountController.updateAccount(email,userName,fullName,departmentId,positionId,accountId);
+        int accountID;
+        String userName;
+        do{
+            System.out.println("Nhap ID account can update: ");
+            accountID = sc.nextInt();
+            sc.nextLine();
+            if(accountController.checkExistID(accountID)){
+                break;
+            }else{
+                System.out.println("ID was not exist!");
+            }
+        }while(true);
+        do{
+            System.out.println("Nhap userName: ");
+            userName = sc.nextLine();
+            if(!Utils.checkString(userName)){
+                if(accountController.checkUnique("userName",userName)){
+                    System.out.println("Success!");
+                    break;
+                }else{
+                    System.out.println("User name was exist!");
+                }
+            }else{
+                System.out.println("User name khong hop le!");
+            }
+        }while(true);
+        boolean check = accountController.updateAccount(userName,accountID);
         if(check){
             System.out.println("update success!");
         }else{
@@ -93,9 +155,18 @@ public class AccountFunction {
         }
     }
     public void deleteAccount(){
-        System.out.println("Nhap User name can delete: ");
-        String userName = sc.nextLine();
-        boolean check = accountController.deleteAccount(userName);
+        int accountID;
+        do{
+            System.out.println("Nhap ID account can delete: ");
+            accountID = sc.nextInt();
+            sc.nextLine();
+            if(accountController.checkExistID(accountID)){
+                break;
+            }else{
+                System.out.println("ID was not exist!");
+            }
+        }while(true);
+        boolean check = accountController.deleteAccount(accountID);
         if(check){
             System.out.println("delete success!");
         }else{

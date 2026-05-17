@@ -7,10 +7,13 @@ import java.util.List;
 
 public interface IAccountRepository {
     List<Account> getAccount();
-    boolean updateAccount(String email, String userName, String fullName, int departmentId,
-                                        int positionId, int accountId);
-    boolean deleteAccount(String userName);
+    boolean updateAccount(String userName,int accountId);
+    boolean deleteAccount(int accountID);
     List<Account> findAccountByUserName(String userName);
     boolean createAccount(String email, String userName, String fullName, int departmentId,
                           int positionId, LocalDate createDate);
+
+    boolean checkUnique(String nameCol, String noidung);
+
+    boolean checkExistID(int accountID);
 }

@@ -1,8 +1,6 @@
 package org.example.Backend.Controller;
 
-import org.example.Backend.Repository.AccountRepositoryImpl;
-import org.example.Backend.Repository.IAccountRepository;
-import org.example.Backend.Service.AccountServiceImpl;
+import org.example.Backend.Service.Impl.AccountServiceImpl;
 import org.example.Backend.Service.IAccoountService;
 import org.example.Entity.Account;
 
@@ -10,30 +8,35 @@ import java.time.LocalDate;
 import java.util.List;
 
 public class AccountController {
+    private IAccoountService accountService = new AccountServiceImpl();
 
     public List<Account> getAccount() {
-        IAccoountService accountService = new AccountServiceImpl();
         return accountService.getAccount();
     }
 
-    public boolean updateAccount(String email, String userName, String fullName,
-                                 int departmentId, int positionId, int accountId) {
-        IAccoountService accountService = new AccountServiceImpl();
-        return accountService.updateAccount(email,userName,fullName,departmentId,positionId,accountId);
+    public boolean updateAccount(String userName, int accountId) {
+        return accountService.updateAccount(userName,accountId);
     }
 
-    public boolean deleteAccount(String userName) {
-        IAccoountService accountService = new AccountServiceImpl();
-        return accountService.deleteAccount(userName);
+    public boolean deleteAccount(int accountID) {
+        return accountService.deleteAccount(accountID);
     }
 
     public List<Account> findAccountByUserName(String userName) {
-        IAccoountService accountService = new AccountServiceImpl();
         return accountService.findAccountByUserName(userName);
     }
 
-    public boolean createAccount(String email, String userName, String fullName, int departmentId, int positionId, LocalDate createDate) {
-        IAccoountService accountService = new AccountServiceImpl();
-        return accountService.createAccount(email,userName,fullName,departmentId,positionId,LocalDate.now());
+    public boolean createAccount(String email, String userName, String fullName,
+                                 int departmentId, int positionId, LocalDate createDate) {
+        return accountService.createAccount(email,userName,fullName,
+                departmentId,positionId,LocalDate.now());
+    }
+
+    public boolean checkUnique(String nameCol, String noiDung) {
+        return accountService.checkUnique(nameCol, noiDung);
+    }
+
+    public boolean checkExistID(int accountID) {
+        return accountService.checkExistID(accountID);
     }
 }

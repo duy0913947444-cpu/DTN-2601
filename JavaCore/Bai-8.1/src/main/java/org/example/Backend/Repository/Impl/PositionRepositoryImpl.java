@@ -1,5 +1,6 @@
-package org.example.Backend.Repository;
+package org.example.Backend.Repository.Impl;
 
+import org.example.Backend.Repository.IPositionRepository;
 import org.example.Entity.Position;
 import org.example.Enums.PositionName;
 import org.example.Utils.JDBCConnection;
@@ -10,8 +11,9 @@ import java.sql.ResultSet;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
-public class PositionRepositoryImpl implements IPositionRepository{
+public class PositionRepositoryImpl implements IPositionRepository {
     @Override
     public List<Position> getPosition() {
         try{
@@ -69,29 +71,20 @@ public class PositionRepositoryImpl implements IPositionRepository{
     }
 
     @Override
-    public boolean deletePosition(PositionName positionName) {
-        String getIdQuery    = "SELECT position_id FROM `position` WHERE position_name = ? LIMIT 1";
+    public boolean deletePosition(int positionID) {
         String deleteAccount = "DELETE FROM `account` WHERE position_id = ?";
         String deletePosition = "DELETE FROM `position` WHERE position_id = ?";
 
         try (Connection conn = JDBCConnection.connectDB("qlcb")) {
             conn.setAutoCommit(false);
 
-            int positionId;
-            try (PreparedStatement ps = conn.prepareStatement(getIdQuery)) {
-                ps.setString(1, String.valueOf(positionName));
-                ResultSet rs = ps.executeQuery();
-                if (!rs.next()) return false;
-                positionId = rs.getInt("position_id");
-            }
-
             try (PreparedStatement ps = conn.prepareStatement(deleteAccount)) {
-                ps.setInt(1, positionId);
+                ps.setInt(1, positionID);
                 ps.executeUpdate();
             }
 
             try (PreparedStatement ps = conn.prepareStatement(deletePosition)) {
-                ps.setInt(1, positionId);
+                ps.setInt(1, positionID);
                 int rows = ps.executeUpdate();
                 conn.commit();
                 return rows > 0;
@@ -202,5 +195,47 @@ public class PositionRepositoryImpl implements IPositionRepository{
             e.printStackTrace();
         }
         return null;
+    }
+
+    @Override
+    public boolean checkExistName(PositionName positionName, Integer ID) {
+        boolean check = false;
+        try {
+            String queryStatement = "Select * from position where position_name like ?  ";
+
+            if (Objects.nonNull(ID)) {
+                queryStatement += " and position_id != ? ";
+            }
+            Connection connection = JDBCConnection.connectDB("qlcb");
+            PreparedStatement preparedStatement = connection.prepareStatement(queryStatement);
+            preparedStatement.setString(1,String.valueOf(positionName));
+            if (Objects.nonNull(ID)) {
+                preparedStatement.setInt(2, ID);
+            }
+            ResultSet rs = preparedStatement.executeQuery();
+            if (rs.next()) check = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return check;
+    }
+
+    @Override
+    public boolean checkExistID(int positionId) {
+        boolean check = false;
+        try{
+            String queryStatement = "Select * from position where position_id = ? ";
+
+            Connection connection = JDBCConnection.connectDB("qlcb");
+            PreparedStatement preparedStatement = connection.prepareStatement(queryStatement);
+
+            preparedStatement.setInt(1,positionId);
+
+            ResultSet rs = preparedStatement.executeQuery();
+            if(rs.next()) check = true;
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+        return check;
     }
 }
