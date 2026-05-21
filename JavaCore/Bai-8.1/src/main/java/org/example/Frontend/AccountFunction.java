@@ -4,6 +4,7 @@ import org.example.Backend.Controller.AccountController;
 import org.example.Backend.Controller.DepartmentController;
 import org.example.Backend.Controller.PositionController;
 import org.example.Entity.Account;
+import org.example.Utils.ScannerUtils;
 import org.example.Utils.Utils;
 
 import java.time.LocalDate;
@@ -24,6 +25,7 @@ public class AccountFunction {
             System.out.println("3. Update account");
             System.out.println("4. Xoa account");
             System.out.println("5. Tim account theo ten");
+            System.out.println("6. import Account tu file");
             System.out.println("Other. Exit");
             String choose = sc.nextLine();
             switch (choose){
@@ -42,11 +44,25 @@ public class AccountFunction {
                 case "5":
                     findByUserName();
                     break;
+                case "6":
+                    importAccountToCSV();
+                    break;
                 default:
                     return;
             }
         }while(true);
     }
+
+    private void importAccountToCSV() {
+        System.out.println("Nhap path: ");
+        String path = ScannerUtils.inputString();
+        if(accountController.importAccountToCSV(path)){
+            System.out.println("Success!");
+        }else{
+            Utils.readErrorFile();
+        }
+    }
+
     public void showAccount(){
         List<Account> accountList = accountController.getAccount();
         for(Account account: accountList){
@@ -58,45 +74,29 @@ public class AccountFunction {
         int departmentId, positionId;
         do{
             System.out.println("Nhap email: ");
-            email = sc.nextLine();
-            if(Utils.checkEmail(email)){
-                if(accountController.checkUnique("email", email)){
-                    System.out.println("Success!");
-                    break;
-                }else{
-                    System.out.println("Email was exist!");
-                }
+            email = ScannerUtils.inputEmail();
+            if(accountController.checkUnique("email", email, null)){
+                System.out.println("Success!");
+                break;
             }else{
-                System.out.println("Email khong hop le!");
+                System.out.println("Email was exist!");
             }
         }while(true);
         do{
             System.out.println("Nhap userName: ");
-            userName = sc.nextLine();
-            if(!Utils.checkString(userName)){
-                if(accountController.checkUnique("userName",userName)){
-                    System.out.println("Success!");
-                    break;
-                }else{
-                    System.out.println("User name was exist!");
-                }
-            }else{
-                System.out.println("User name khong hop le!");
-            }
-        }while(true);
-        do{
-            System.out.println("Nhap full name: ");
-            fullName = sc.nextLine();
-            if(!Utils.checkString(fullName)){
+            userName = ScannerUtils.inputString();
+            if(accountController.checkUnique("userName",userName, null)){
+                System.out.println("Success!");
                 break;
             }else{
-                System.out.println("Ful name is not empty!");
+                System.out.println("User name was exist!");
             }
         }while(true);
+        System.out.println("Nhap full name: ");
+        fullName = ScannerUtils.inputString();
         do{
             System.out.println("Nhap department ID: ");
-            departmentId = sc.nextInt();
-            sc.nextLine();
+            departmentId = ScannerUtils.inputID();
             if(departmentController.checkExistID(departmentId)){
                 break;
             }else{
@@ -105,8 +105,7 @@ public class AccountFunction {
         }while(true);
         do{
             System.out.println("Nhap position ID: ");
-            positionId = sc.nextInt();
-            sc.nextLine();
+            positionId = ScannerUtils.inputID();
             if(positionController.checkExistID(positionId)){
                 break;
             }else{
@@ -125,8 +124,7 @@ public class AccountFunction {
         String userName;
         do{
             System.out.println("Nhap ID account can update: ");
-            accountID = sc.nextInt();
-            sc.nextLine();
+            accountID = ScannerUtils.inputID();
             if(accountController.checkExistID(accountID)){
                 break;
             }else{
@@ -135,16 +133,12 @@ public class AccountFunction {
         }while(true);
         do{
             System.out.println("Nhap userName: ");
-            userName = sc.nextLine();
-            if(!Utils.checkString(userName)){
-                if(accountController.checkUnique("userName",userName)){
-                    System.out.println("Success!");
-                    break;
-                }else{
-                    System.out.println("User name was exist!");
-                }
+            userName = ScannerUtils.inputString();
+            if(accountController.checkUnique("userName",userName, accountID)){
+                System.out.println("Success!");
+                break;
             }else{
-                System.out.println("User name khong hop le!");
+                System.out.println("User name was exist!");
             }
         }while(true);
         boolean check = accountController.updateAccount(userName,accountID);
@@ -158,8 +152,7 @@ public class AccountFunction {
         int accountID;
         do{
             System.out.println("Nhap ID account can delete: ");
-            accountID = sc.nextInt();
-            sc.nextLine();
+            accountID = ScannerUtils.inputID();
             if(accountController.checkExistID(accountID)){
                 break;
             }else{

@@ -6,6 +6,11 @@ import org.example.Frontend.AccountFunction;
 import org.example.Frontend.DepartmentFunction;
 import org.example.Frontend.PositionFunction;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -31,6 +36,21 @@ public class Utils {
             return false;
         }
     }
+
+    public static void close(Connection connection, Statement statement, ResultSet resultSet){
+        try{
+            if(Objects.nonNull(connection)){
+                connection.close();
+            }else if(Objects.nonNull(statement)){
+                statement.close();
+            }else if(Objects.nonNull(resultSet)){
+                resultSet.close();
+            }
+        }catch(Exception e){
+            e.printStackTrace();
+        }
+    }
+
     public void menu(){
         do{
             System.out.println("Nhap chuc nang: ");
@@ -53,5 +73,15 @@ public class Utils {
                     return;
             }
         }while(true);
+    }
+    public static void readErrorFile() {
+        String line;
+        try(BufferedReader bf = new BufferedReader(new FileReader("D:\\outputdepartment_error.txt"))){
+            while((line = bf.readLine()) != null){
+                System.out.println(line);
+            }
+        }catch (Exception e){
+            System.out.println(e.getMessage());
+        }
     }
 }

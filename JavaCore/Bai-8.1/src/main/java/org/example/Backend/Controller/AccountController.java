@@ -32,11 +32,16 @@ public class AccountController {
                 departmentId,positionId,LocalDate.now());
     }
 
-    public boolean checkUnique(String nameCol, String noiDung) {
-        return accountService.checkUnique(nameCol, noiDung);
+    public boolean checkUnique(String nameCol, String noiDung, Integer ID) {
+        return accountService.checkUnique(nameCol, noiDung, ID);
     }
 
     public boolean checkExistID(int accountID) {
         return accountService.checkExistID(accountID);
+    }
+
+
+    public boolean importAccountToCSV(String path) {
+        return accountService.importAccountToCSV(path);
     }
 }

@@ -13,7 +13,9 @@ public interface IAccoountService {
     boolean createAccount(String email, String userName, String fullName, int departmentId,
                           int positionId, LocalDate createDate);
 
-    boolean checkUnique(String nameCol, String noiDung);
+    boolean checkUnique(String nameCol, String noiDung, Integer ID);
 
     boolean checkExistID(int accountID);
+
+    boolean importAccountToCSV(String path);
 }

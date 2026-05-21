@@ -3,11 +3,9 @@ package org.example.Backend.Repository.Impl;
 import org.example.Backend.Repository.IDepartmentRepository;
 import org.example.Entity.Department;
 import org.example.Utils.JDBCConnection;
+import org.example.Utils.Utils;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -15,72 +13,97 @@ import java.util.Objects;
 public class DepartmentRepositoryImpl implements IDepartmentRepository {
     @Override
     public boolean deleteDepartment(int departmentID) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        PreparedStatement preparedStatementAccount = null;
+        Statement statement = null;
+        String disableSafeUpdate = "SET SQL_SAFE_UPDATES = 0;";
         String deleteAccount = "DELETE FROM `account` WHERE department_id = ?";
         String deleteDepartment = "DELETE FROM `department` WHERE department_id = ?";
 
-        try (Connection conn = JDBCConnection.connectDB("qlcb")) {
-            conn.setAutoCommit(false);
-
-            try (PreparedStatement ps = conn.prepareStatement(deleteAccount)) {
-                ps.setInt(1, departmentID);
-                ps.executeUpdate();
+        try{
+            connection = JDBCConnection.connectDB("qlcb");
+            connection.setAutoCommit(false);
+            statement = connection.createStatement();
+            statement.executeUpdate(disableSafeUpdate);
+            //delete account
+            preparedStatementAccount = connection.prepareStatement(deleteAccount);
+            preparedStatementAccount.setInt(1, departmentID);
+            preparedStatementAccount.executeUpdate();
+            //delete department
+            preparedStatement = connection.prepareStatement(deleteDepartment);
+            preparedStatement.setInt(1, departmentID);
+            int rows = preparedStatement.executeUpdate();
+            if(rows > 0){
+                connection.commit();
+                return true;
+            }else{
+                connection.rollback();
+                return false;
             }
-
-            try (PreparedStatement ps = conn.prepareStatement(deleteDepartment)) {
-                ps.setInt(1, departmentID);
-                int rows = ps.executeUpdate();
-                conn.commit();
-                return rows > 0;
-            }
-
         } catch (Exception e) {
             e.printStackTrace();
+        }finally {
+            Utils.close(connection, preparedStatement, null);
+            Utils.close(null, preparedStatementAccount, null);
+            Utils.close(null, statement, null);
         }
         return false;
     }
 
     @Override
     public boolean updateDepartment(String departmentName, int departmentId) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
         try {
             String queryStatement = "update `department`\n" +
                     "set department_name = ?\n" +
                     "where department_id = ?";
-            Connection connection = JDBCConnection.connectDB("qlcb");
-            PreparedStatement preparedStatement = connection.prepareStatement(queryStatement);
+            connection = JDBCConnection.connectDB("qlcb");
+            preparedStatement = connection.prepareStatement(queryStatement);
             preparedStatement.setString(1, departmentName);
             preparedStatement.setInt(2, departmentId);
             int c = preparedStatement.executeUpdate();
             return c > 0;
         } catch (Exception e) {
             e.printStackTrace();
+        }finally {
+            Utils.close(connection, preparedStatement, null);
         }
         return false;
     }
 
     @Override
     public boolean createDepartment(String departmentName) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
         try {
             String queryStatement = "insert into `department`(department_name)\n" +
                     "value (?)";
-            Connection connection = JDBCConnection.connectDB("qlcb");
-            PreparedStatement preparedStatement = connection.prepareStatement(queryStatement);
+            connection = JDBCConnection.connectDB("qlcb");
+            preparedStatement = connection.prepareStatement(queryStatement);
             preparedStatement.setString(1, departmentName);
             int c = preparedStatement.executeUpdate();
             return c > 0;
         } catch (Exception e) {
             e.printStackTrace();
+        }finally {
+            Utils.close(connection, preparedStatement, null);
         }
         return false;
     }
 
     @Override
     public List<Department> getDepartment() {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
         try {
             List<Department> departmentList = new ArrayList<>();
             String queryStatement = "select * from department";
-            Connection connection = JDBCConnection.connectDB("qlcb");
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(queryStatement);
+            connection = JDBCConnection.connectDB("qlcb");
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(queryStatement);
             Department department;
             while (resultSet.next()) {
                 department = new Department();
@@ -91,12 +114,19 @@ public class DepartmentRepositoryImpl implements IDepartmentRepository {
             return departmentList;
         } catch (Exception e) {
             e.printStackTrace();
+        }finally {
+            Utils.close(connection, statement, resultSet);
         }
         return null;
     }
 
     @Override
     public List<Department> getDepartmentWithSmallestAccount() {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        ResultSet rs = null;
         List<Department> departmentList = new ArrayList<>();
         String subQuery = "select count(1)\n" +
                 "\t\t\t\t\tfrom `department` d\n" +
@@ -110,17 +140,17 @@ public class DepartmentRepositoryImpl implements IDepartmentRepository {
                 "group by d.department_id\n" +
                 "having count(1) = ?";
         try {
-            Connection connection = JDBCConnection.connectDB("qlcb");
+            connection = JDBCConnection.connectDB("qlcb");
             //Subquery
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(subQuery);
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(subQuery);
             if (!resultSet.next()) return null;
             int count = resultSet.getInt("count(1)");
             //Query
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, count);
-            ResultSet rs = preparedStatement.executeQuery();
-            while (rs.next()) {
+            rs = preparedStatement.executeQuery();
+            while (resultSet.next()) {
                 Department department = new Department();
                 department.setDepartmentId(rs.getInt("department_id"));
                 department.setDepartmentName(rs.getString("department_name"));
@@ -129,12 +159,20 @@ public class DepartmentRepositoryImpl implements IDepartmentRepository {
             return departmentList;
         } catch (Exception e) {
             e.printStackTrace();
+        }finally {
+            Utils.close(connection, preparedStatement, resultSet);
+            Utils.close(null, statement, rs);
         }
         return null;
     }
 
     @Override
     public List<Department> getDepartmentWithHighestAccount() {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        ResultSet rs = null;
         List<Department> departmentList = new ArrayList<>();
         String subQuery = "select count(1)\n" +
                 "\t\t\t\t\tfrom `department` d\n" +
@@ -148,16 +186,16 @@ public class DepartmentRepositoryImpl implements IDepartmentRepository {
                 "group by d.department_id\n" +
                 "having count(1) = ?";
         try {
-            Connection connection = JDBCConnection.connectDB("qlcb");
+            connection = JDBCConnection.connectDB("qlcb");
             //Subquery
-            Statement statement = connection.createStatement();
-            ResultSet resultSet = statement.executeQuery(subQuery);
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(subQuery);
             if (!resultSet.next()) return null;
             int count = resultSet.getInt("count(1)");
             //Query
-            PreparedStatement preparedStatement = connection.prepareStatement(query);
+            preparedStatement = connection.prepareStatement(query);
             preparedStatement.setInt(1, count);
-            ResultSet rs = preparedStatement.executeQuery();
+            rs = preparedStatement.executeQuery();
             while (rs.next()) {
                 Department department = new Department();
                 department.setDepartmentId(rs.getInt("department_id"));
@@ -167,21 +205,27 @@ public class DepartmentRepositoryImpl implements IDepartmentRepository {
             return departmentList;
         } catch (Exception e) {
             e.printStackTrace();
+        }finally {
+            Utils.close(connection, preparedStatement, resultSet);
+            Utils.close(null, statement, rs);
         }
         return null;
     }
 
     @Override
     public List<Department> findDepartmentByName(String departmentName) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        ResultSet resultSet = null;
         try {
             List<Department> result = new ArrayList<>();
             String queryStatement = "select *\n" +
                     "from `department`\n" +
                     "where department_name = ?";
-            Connection connection = JDBCConnection.connectDB("qlcb");
-            PreparedStatement preparedStatement = connection.prepareStatement(queryStatement);
+            connection = JDBCConnection.connectDB("qlcb");
+            preparedStatement = connection.prepareStatement(queryStatement);
             preparedStatement.setString(1, departmentName);
-            ResultSet resultSet = preparedStatement.executeQuery();
+            resultSet = preparedStatement.executeQuery();
             Department department;
             while (resultSet.next()) {
                 department = new Department();
@@ -192,40 +236,50 @@ public class DepartmentRepositoryImpl implements IDepartmentRepository {
             return result;
         } catch (Exception e) {
             e.printStackTrace();
+        }finally {
+            Utils.close(connection, preparedStatement, resultSet);
         }
         return null;
     }
 
     @Override
     public boolean checkExistName(String departmentName, Integer ID) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
         boolean check = false;
         try {
-            String queryStatement = "Select * from department where department_name like ?  ";
-
-            if (Objects.nonNull(ID)) {
-                queryStatement += " and department_id != ? ";
-            }
-            Connection connection = JDBCConnection.connectDB("qlcb");
-            PreparedStatement preparedStatement = connection.prepareStatement(queryStatement);
+            String queryStatement = "select * \n" +
+                                    "from department\n" +
+                                    "where department_name = ? and (department_id != ? or ? is null)";
+            connection = JDBCConnection.connectDB("qlcb");
+            preparedStatement = connection.prepareStatement(queryStatement);
             preparedStatement.setString(1, departmentName);
-            if (Objects.nonNull(ID)) {
+            if(Objects.isNull(ID)){
+                preparedStatement.setNull(2, java.sql.Types.INTEGER);
+                preparedStatement.setNull(3, java.sql.Types.INTEGER);
+            }else{
                 preparedStatement.setInt(2, ID);
+                preparedStatement.setInt(3, ID);
             }
             ResultSet rs = preparedStatement.executeQuery();
             if (rs.next()) check = true;
         } catch (Exception e) {
             e.printStackTrace();
+        }finally {
+            Utils.close(connection, preparedStatement, null);
         }
         return check;
     }
     @Override
     public boolean checkExistID(Integer ID) {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
         boolean check = false;
         try{
             String queryStatement = "Select * from department where department_id = ? ";
 
-            Connection connection = JDBCConnection.connectDB("qlcb");
-            PreparedStatement preparedStatement = connection.prepareStatement(queryStatement);
+            connection = JDBCConnection.connectDB("qlcb");
+            preparedStatement = connection.prepareStatement(queryStatement);
 
             preparedStatement.setInt(1,ID);
 
@@ -233,8 +287,36 @@ public class DepartmentRepositoryImpl implements IDepartmentRepository {
             if(rs.next()) check = true;
         }catch(Exception e){
             e.printStackTrace();
+        }finally {
+            Utils.close(connection, preparedStatement, null);
         }
         return check;
+    }
+
+    @Override
+    public boolean createDepartments(List<Department> departmentList) throws SQLException {
+        Connection connection = null;
+        PreparedStatement preparedStatement = null;
+        try {
+            String queryStatement = "insert into `department`(department_name)\n" +
+                    "value (?)";
+            connection = JDBCConnection.connectDB("qlcb");
+            connection.setAutoCommit(false);
+            preparedStatement = connection.prepareStatement(queryStatement);
+            for(Department department : departmentList){
+                preparedStatement.setString(1, department.getDepartmentName());
+                preparedStatement.addBatch();
+            }
+            preparedStatement.executeBatch();
+            connection.commit();
+            return true;
+        } catch (Exception e) {
+            connection.rollback();
+            e.printStackTrace();
+        }finally {
+            Utils.close(connection, preparedStatement, null);
+        }
+        return false;
     }
 
 }

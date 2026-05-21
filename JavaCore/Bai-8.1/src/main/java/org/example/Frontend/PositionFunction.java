@@ -4,6 +4,7 @@ package org.example.Frontend;
 import org.example.Backend.Controller.PositionController;
 import org.example.Entity.Position;
 import org.example.Enums.PositionName;
+import org.example.Utils.ScannerUtils;
 
 import java.util.List;
 import java.util.Scanner;
@@ -97,12 +98,7 @@ public class PositionFunction {
         String choose;
         do {
             System.out.println("Nhap ID position can update:");
-            positionId = sc.nextInt();
-            sc.nextLine();
-            if (positionId < 0) {
-                System.out.println("Position ID ko hop le!");
-                continue;
-            }
+            positionId = ScannerUtils.inputID();
             if (positionController.checkExistID(positionId)) {
                 break;
             }
@@ -129,12 +125,7 @@ public class PositionFunction {
         int positionID;
         do {
             System.out.println("Nhap ID position de xoa");
-            positionID = sc.nextInt();
-            sc.nextLine();
-            if (positionID < 0) {
-                System.out.println("Position ID ko hop le!");
-                continue;
-            }
+            positionID = ScannerUtils.inputID();
             if (positionController.checkExistID(positionID)) {
                 break;
             }

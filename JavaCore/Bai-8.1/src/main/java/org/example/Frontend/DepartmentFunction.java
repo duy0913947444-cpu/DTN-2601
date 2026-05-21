@@ -2,6 +2,7 @@ package org.example.Frontend;
 
 import org.example.Backend.Controller.DepartmentController;
 import org.example.Entity.Department;
+import org.example.Utils.ScannerUtils;
 import org.example.Utils.Utils;
 
 import java.util.List;
@@ -20,6 +21,7 @@ public class DepartmentFunction {
             System.out.println("5. Tim department theo ten");
             System.out.println("6. Lay cac department nhiu account nhat");
             System.out.println("7. Lay cac department it account nhat");
+            System.out.println("8. import department tu file");
             System.out.println("Other. Exit");
             String choose = sc.nextLine();
             switch (choose){
@@ -44,11 +46,25 @@ public class DepartmentFunction {
                 case "7":
                     getDepartmentSmallestAccount();
                     break;
+                case "8":
+                    importDepartmentToCSV();
+                    break;
                 default:
                     return;
             }
         }while(true);
     }
+
+    private void importDepartmentToCSV() {
+        System.out.println("Nhap path: ");
+        String path = ScannerUtils.inputString();
+        if(departmentController.importDepartmentToCSV(path)){
+            System.out.println("Success!");
+        }else{
+            Utils.readErrorFile();
+        }
+    }
+
     public void showDepartment(){
         List<Department> departmentList = departmentController.getDepartment();
         for(Department department: departmentList){
@@ -58,20 +74,14 @@ public class DepartmentFunction {
     public void createDepartment(){
         String departmentName;
         do{
-            boolean check = true;
             System.out.println("Nhap department name:");
-            departmentName = sc.nextLine();
-            //Check null, "" and " "
-            if(Utils.checkString(departmentName)){
-                System.out.println("Name was wrong!");
-                check = false;
-            }
+            departmentName = ScannerUtils.inputString();
             //Check unique
             if(departmentController.checkExistName(departmentName, null)){
                 System.out.println("Name was Exist!");
-                check = false;
+            }else{
+                break;
             }
-            if (check) break;
         }while(true);
         boolean check = departmentController.createDepartment(departmentName);
         if(check){
@@ -85,12 +95,7 @@ public class DepartmentFunction {
         String departmentName;
         do{
             System.out.println("Nhap id department can update:");
-            departmentId = sc.nextInt();
-            sc.nextLine();
-            if(departmentId < 0){
-                System.out.println("ID khong hop le!");
-                continue;
-            }
+            departmentId = ScannerUtils.inputID();
             if(departmentController.checkExistID(departmentId)){
                 break;
             }else{
@@ -99,11 +104,7 @@ public class DepartmentFunction {
         }while(true);
         do {
             System.out.println("Nhap department name:");
-            departmentName = sc.nextLine();
-            if(Utils.checkString(departmentName)){
-                System.out.println("Department ko hop le!");
-                continue;
-            }
+            departmentName = ScannerUtils.inputString();
             if(departmentController.checkExistName(departmentName,departmentId)){
                 System.out.println("Department name was exist!");
             }else{
@@ -122,12 +123,7 @@ public class DepartmentFunction {
         int departmentID;
          do{
             System.out.println("Nhap department id de xoa: ");
-            departmentID = sc.nextInt();
-            sc.nextLine();
-            if(departmentID < 0){
-                System.out.println("ID ko hop le");
-                continue;
-            }
+            departmentID = ScannerUtils.inputID();
             if(departmentController.checkExistID(departmentID)){
                 break;
             }else{

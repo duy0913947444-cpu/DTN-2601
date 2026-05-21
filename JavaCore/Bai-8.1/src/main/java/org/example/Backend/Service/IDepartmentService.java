@@ -3,6 +3,7 @@ package org.example.Backend.Service;
 
 import org.example.Entity.Department;
 
+import java.io.FileNotFoundException;
 import java.util.List;
 
 public interface IDepartmentService {
@@ -17,4 +18,6 @@ public interface IDepartmentService {
     boolean checkExistName(String departmentName, Integer ID);
 
     boolean checkExistID(int departmentID);
+
+    boolean importDepartmentToCSV(String path);
 }

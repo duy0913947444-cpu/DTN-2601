@@ -2,6 +2,7 @@ package org.example.Backend.Repository;
 
 import org.example.Entity.Account;
 
+import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -13,7 +14,9 @@ public interface IAccountRepository {
     boolean createAccount(String email, String userName, String fullName, int departmentId,
                           int positionId, LocalDate createDate);
 
-    boolean checkUnique(String nameCol, String noidung);
+    boolean checkUnique(String nameCol, String noidung, Integer ID);
 
     boolean checkExistID(int accountID);
+
+    boolean createAccounts(List<Account> accounts) throws SQLException;
 }

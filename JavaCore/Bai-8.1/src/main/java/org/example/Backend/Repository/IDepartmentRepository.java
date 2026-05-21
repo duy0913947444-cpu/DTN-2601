@@ -3,6 +3,7 @@ package org.example.Backend.Repository;
 
 import org.example.Entity.Department;
 
+import java.sql.SQLException;
 import java.util.List;
 
 public interface IDepartmentRepository {
@@ -16,4 +17,5 @@ public interface IDepartmentRepository {
 
     boolean checkExistName(String departmentName, Integer ID);
     boolean checkExistID(Integer ID);
+    boolean createDepartments(List<Department> departmentList) throws SQLException;
 }
