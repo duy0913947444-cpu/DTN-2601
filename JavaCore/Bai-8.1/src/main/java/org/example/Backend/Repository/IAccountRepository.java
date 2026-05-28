@@ -1,10 +1,13 @@
 package org.example.Backend.Repository;
 
 import org.example.Entity.Account;
+import org.example.Entity.Department;
+import org.example.Entity.Position;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Set;
 
 public interface IAccountRepository {
     List<Account> getAccount();
@@ -19,4 +22,6 @@ public interface IAccountRepository {
     boolean checkExistID(int accountID);
 
     boolean createAccounts(List<Account> accounts) throws SQLException;
+
+    void getAccountContext(Set<String> sAccountByUserName, Set<String> sAccountByEmail, List<Integer> departments, List<Integer> positions);
 }

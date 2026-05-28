@@ -56,11 +56,7 @@ public class AccountFunction {
     private void importAccountToCSV() {
         System.out.println("Nhap path: ");
         String path = ScannerUtils.inputString();
-        if(accountController.importAccountToCSV(path)){
-            System.out.println("Success!");
-        }else{
-            Utils.readErrorFile();
-        }
+        System.out.println(accountController.importAccountToCSV(path));
     }
 
     public void showAccount(){

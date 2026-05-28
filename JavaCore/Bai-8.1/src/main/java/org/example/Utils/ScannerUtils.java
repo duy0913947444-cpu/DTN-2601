@@ -2,6 +2,8 @@ package org.example.Utils;
 
 import java.util.Scanner;
 
+import static org.example.Common.StringCommon.emailRegex;
+
 public class ScannerUtils {
     private static Scanner sc = new Scanner(System.in);
     public static String inputString(){
@@ -37,7 +39,6 @@ public class ScannerUtils {
     }
     public static String inputEmail(){
         String email;
-        String emailRegex = "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$";
         do{
             email = inputString();
             if(email.matches(emailRegex)){

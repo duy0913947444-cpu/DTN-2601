@@ -10,9 +10,7 @@ import org.example.Utils.Utils;
 
 import java.sql.*;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class AccountRepositoryImpl implements IAccountRepository {
     @Override
@@ -238,8 +236,8 @@ public class AccountRepositoryImpl implements IAccountRepository {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         try {
-            String queryStatement = "insert into `account`(email,user_name,full_name,create_date)\n" +
-                    "value (?,?,?,?,)";
+            String queryStatement = "insert into `account`(email,user_name,full_name,department_id,position_id,create_date)\n" +
+                    "value (?,?,?,?,?,?)";
             connection = JDBCConnection.connectDB("qlcb");
             connection.setAutoCommit(false);
             preparedStatement = connection.prepareStatement(queryStatement);
@@ -247,7 +245,9 @@ public class AccountRepositoryImpl implements IAccountRepository {
                 preparedStatement.setString(1, account.getEmail());
                 preparedStatement.setString(2, account.getUser());
                 preparedStatement.setString(3, account.getFullName());
-                preparedStatement.setString(4, String.valueOf(LocalDate.now()));
+                preparedStatement.setInt(4, account.getDepartment().getDepartmentId());
+                preparedStatement.setInt(5, account.getPosition().getPositionId());
+                preparedStatement.setString(6, String.valueOf(LocalDate.now()));
                 preparedStatement.addBatch();
             }
             preparedStatement.executeBatch();
@@ -259,5 +259,32 @@ public class AccountRepositoryImpl implements IAccountRepository {
             Utils.close(connection, preparedStatement, null);
         }
         return false;
+    }
+
+    @Override
+    public void getAccountContext(Set<String> sAccountByUserName, Set<String> sAccountByEmail,
+                               List<Integer> departments, List<Integer> positions) {
+        Connection connection = null;
+        Statement statement = null;
+        ResultSet resultSet = null;
+        try {
+            String queryStatement = "SELECT a.*, d.department_id, p.position_id\n" +
+                    "FROM `account` a\n" +
+                    "left join `department` d on a.department_id = d.department_id\n" +
+                    "left join `position` p on a.position_id = p.position_id;";
+            connection = JDBCConnection.connectDB("qlcb");
+            statement = connection.createStatement();
+            resultSet = statement.executeQuery(queryStatement);
+            while (resultSet.next()) {
+                sAccountByUserName.add(resultSet.getString("user_name"));
+                sAccountByEmail.add(resultSet.getString("email"));
+                departments.add(resultSet.getInt("department_id"));
+                positions.add(resultSet.getInt("position_id"));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            Utils.close(connection, statement, resultSet);
+        }
     }
 }

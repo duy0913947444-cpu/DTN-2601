@@ -7,6 +7,13 @@ public class Position {
     private int positionId;
     private PositionName positionName;
 
+    public Position(int positionId) {
+        this.positionId = positionId;
+    }
+
+    public Position() {
+    }
+
     public int getPositionId() {
         return positionId;
     }

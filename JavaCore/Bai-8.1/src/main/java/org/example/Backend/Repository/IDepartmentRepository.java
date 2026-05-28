@@ -5,6 +5,7 @@ import org.example.Entity.Department;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Set;
 
 public interface IDepartmentRepository {
     boolean deleteDepartment(int departmentID);
@@ -18,4 +19,6 @@ public interface IDepartmentRepository {
     boolean checkExistName(String departmentName, Integer ID);
     boolean checkExistID(Integer ID);
     boolean createDepartments(List<Department> departmentList) throws SQLException;
+
+    Set<String> getSetDepartmentName();
 }

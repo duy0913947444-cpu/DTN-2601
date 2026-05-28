@@ -58,11 +58,7 @@ public class DepartmentFunction {
     private void importDepartmentToCSV() {
         System.out.println("Nhap path: ");
         String path = ScannerUtils.inputString();
-        if(departmentController.importDepartmentToCSV(path)){
-            System.out.println("Success!");
-        }else{
-            Utils.readErrorFile();
-        }
+        System.out.println(departmentController.importDepartmentToCSV(path));
     }
 
     public void showDepartment(){

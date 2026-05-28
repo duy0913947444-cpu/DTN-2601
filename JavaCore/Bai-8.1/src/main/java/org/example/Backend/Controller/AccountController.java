@@ -41,7 +41,7 @@ public class AccountController {
     }
 
 
-    public boolean importAccountToCSV(String path) {
+    public String importAccountToCSV(String path) {
         return accountService.importAccountToCSV(path);
     }
 }

@@ -2,15 +2,19 @@ package org.example.Utils;
 
 
 
+import org.example.DTO.ImportError;
 import org.example.Frontend.AccountFunction;
 import org.example.Frontend.DepartmentFunction;
 import org.example.Frontend.PositionFunction;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
@@ -23,20 +27,15 @@ public class Utils {
     public static boolean checkString(String s){
         return Objects.isNull(s) || s.trim().isEmpty();
     }
-
-    public static boolean checkEmail(String email){
-        if("@".equals(String.valueOf(email.charAt(0))) ||
-                "@".equals(String.valueOf(email.charAt(email.length()-1)))){
-            return false;
-        }
-        String[] strings = email.split("@");
-        if(strings.length == 2){
+    public static boolean checkID(String ID){
+        try{
+            int i = Integer.parseInt(ID);
+            if(i < 0) return false;
             return true;
-        }else{
+        }catch(Exception e){
             return false;
         }
     }
-
     public static void close(Connection connection, Statement statement, ResultSet resultSet){
         try{
             if(Objects.nonNull(connection)){
@@ -82,6 +81,18 @@ public class Utils {
             }
         }catch (Exception e){
             System.out.println(e.getMessage());
+        }
+    }
+    public static void writeErrorFile(String pathFile, String lineFirst, List<ImportError> importErrorList){
+        try(BufferedWriter bf = new BufferedWriter(new FileWriter(pathFile))){
+            bf.write(lineFirst);
+            bf.newLine();
+            for(ImportError importError : importErrorList){
+                bf.write(importError.getLine() + " , " + importError.getMassage());
+                bf.newLine();
+            }
+        }catch(Exception e){
+            e.printStackTrace();
         }
     }
 }

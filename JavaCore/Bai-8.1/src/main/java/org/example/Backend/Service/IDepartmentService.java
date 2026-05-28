@@ -1,12 +1,13 @@
 package org.example.Backend.Service;
 
 
+import org.example.DTO.CSV.DepartmentCsv;
+import org.example.DTO.Context.DepartmentContext;
 import org.example.Entity.Department;
 
-import java.io.FileNotFoundException;
 import java.util.List;
 
-public interface IDepartmentService {
+public interface IDepartmentService extends IImportFile<DepartmentCsv, Department, DepartmentContext>{
     boolean deleteDepartment(int departmentID);
     boolean updateDepartment(String departmentName, int departmentId);
     boolean createDepartment(String departmentName);
@@ -19,5 +20,5 @@ public interface IDepartmentService {
 
     boolean checkExistID(int departmentID);
 
-    boolean importDepartmentToCSV(String path);
+    String importDepartmentToCSV(String path);
 }

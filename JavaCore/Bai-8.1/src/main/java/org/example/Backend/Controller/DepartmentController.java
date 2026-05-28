@@ -46,7 +46,7 @@ public class DepartmentController {
         return departmentService.checkExistID(departmentID);
     }
 
-    public boolean importDepartmentToCSV(String path) {
+    public String importDepartmentToCSV(String path) {
         return departmentService.importDepartmentToCSV(path);
     }
 }

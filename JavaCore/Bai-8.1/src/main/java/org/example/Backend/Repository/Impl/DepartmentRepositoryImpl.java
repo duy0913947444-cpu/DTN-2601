@@ -6,9 +6,7 @@ import org.example.Utils.JDBCConnection;
 import org.example.Utils.Utils;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class DepartmentRepositoryImpl implements IDepartmentRepository {
     @Override
@@ -294,7 +292,7 @@ public class DepartmentRepositoryImpl implements IDepartmentRepository {
     }
 
     @Override
-    public boolean createDepartments(List<Department> departmentList) throws SQLException {
+    public boolean createDepartments(List<Department> departmentList) {
         Connection connection = null;
         PreparedStatement preparedStatement = null;
         try {
@@ -311,12 +309,33 @@ public class DepartmentRepositoryImpl implements IDepartmentRepository {
             connection.commit();
             return true;
         } catch (Exception e) {
-            connection.rollback();
-            e.printStackTrace();
+            try{
+                connection.rollback();
+            }catch (SQLException sqlE){
+                throw new RuntimeException(sqlE);
+            }
         }finally {
             Utils.close(connection, preparedStatement, null);
         }
         return false;
+    }
+
+    @Override
+    public Set<String> getSetDepartmentName() {
+        Set<String> sDepartmentName = new HashSet<>();
+        String excuteQuery = "select department_name from department order by department_id asc";
+        try{
+            Connection connection = JDBCConnection.connectDB("qlcb");
+            Statement statement = connection.createStatement();
+            ResultSet resultSet = statement.executeQuery(excuteQuery);
+            while (resultSet.next()){
+                String s = resultSet.getString("department_name");
+                sDepartmentName.add(s);
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+        return sDepartmentName;
     }
 
 }
