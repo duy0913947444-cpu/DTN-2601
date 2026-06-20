@@ -1,6 +1,8 @@
 package com.vti.Controller;
 
 import com.vti.Entity.Department;
+import com.vti.From.DepartmentFrom;
+import com.vti.From.DepartmentSearchFrom;
 import com.vti.Service.IDepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,8 +17,8 @@ public class DepartmentController {
     private IDepartmentService departmentService;
 
     @GetMapping
-    public ResponseEntity<?> findAll(){
-        return new ResponseEntity<>(departmentService.findAll(), HttpStatus.OK);
+    public ResponseEntity<?> findAll(DepartmentSearchFrom departmentSearchFrom){
+        return new ResponseEntity<>(departmentService.findAll(departmentSearchFrom), HttpStatus.OK);
     }
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> findByID(@PathVariable(name = "id") Integer id){
@@ -27,13 +29,15 @@ public class DepartmentController {
         return new ResponseEntity<>(departmentService.findByName(name), HttpStatus.OK);
     }
     @PostMapping
-    public ResponseEntity<?> createDepartment(@RequestBody Department department){
-        return new ResponseEntity<>(departmentService.createDepartment(department), HttpStatus.CREATED);
+    public ResponseEntity<?> createDepartment(@RequestBody DepartmentFrom department){
+        departmentService.createDepartment(department);
+        return new ResponseEntity<>("Create success!!", HttpStatus.CREATED);
     }
     @PutMapping(value = "/{id}")
-    public ResponseEntity<?> updateDepartment(@RequestBody Department department,
+    public ResponseEntity<?> updateDepartment(@RequestBody DepartmentFrom department,
                                               @PathVariable(name = "id") Integer id){
-        return new ResponseEntity<>(departmentService.updateDepartment(department, id), HttpStatus.CREATED);
+        departmentService.updateDepartment(department, id);
+        return new ResponseEntity<>("Update success", HttpStatus.CREATED);
     }
     @DeleteMapping(value = "/{id}")
     public ResponseEntity<?> deleteDepartment(@PathVariable(name = "id") Integer id){

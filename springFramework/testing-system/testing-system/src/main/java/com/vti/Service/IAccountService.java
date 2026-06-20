@@ -1,16 +1,19 @@
 package com.vti.Service;
 
 
+import com.vti.DTO.AccountDTO;
 import com.vti.Entity.Account;
+import com.vti.From.AccountFrom;
+import com.vti.From.AccountSearchFrom;
 
 import java.util.List;
 
 public interface IAccountService{
-    List<Account> findAll();
+    List<AccountDTO> findAll(AccountSearchFrom accountSearchFrom);
 
-    Object createAccount(Account account);
+    Account createAccount(AccountFrom createAccountFrom);
 
     void deleteById(Integer id);
 
-    Account updateAccount(Integer id, Account account);
+    void updateAccount(Integer id, AccountFrom accountFrom);
 }
