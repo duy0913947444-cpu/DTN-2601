@@ -1,5 +1,7 @@
 package com.vti.DTO;
 
+import com.vti.Entity.Department;
+import com.vti.Entity.Position;
 import com.vti.Enum.PositionName;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,4 +14,7 @@ import lombok.Setter;
 @NoArgsConstructor
 public class PositionDTO {
     private PositionName name;
+    public PositionDTO(Position position) {
+        this.name = position.getName();
+    }
 }

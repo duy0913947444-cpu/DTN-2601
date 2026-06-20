@@ -1,5 +1,6 @@
 package com.vti.Service.Impl;
 
+import com.vti.DTO.AccountDTO;
 import com.vti.DTO.DepartmentDTO;
 import com.vti.Entity.Department;
 import com.vti.From.DepartmentFrom;
@@ -11,10 +12,11 @@ import com.vti.Utils.Utils;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -27,18 +29,19 @@ public class DepartmentServiceImpl implements IDepartmentService {
     private IDepartmentRepository departmentRepository;
 
     @Override
-    public List<DepartmentDTO> findAll(DepartmentSearchFrom departmentSearchFrom) {
+    public Page<DepartmentDTO> findAll(Pageable pageable , DepartmentSearchFrom departmentSearchFrom) {
         Specification<Department> where = Specification.unrestricted(); // where 1=1
         if(StringUtils.isNotEmpty(departmentSearchFrom.getName())){
             DepartmentCustomSpecification name = new DepartmentCustomSpecification(
                     "name", departmentSearchFrom.getName());
             where = where.and(name);
         }
-        List<Department> departments = departmentRepository.findAll(where);
-        List<DepartmentDTO> departmentDTOS = new ArrayList<>();
-        for (Department department: departments){
-            departmentDTOS.add(modelMapper.map(department,DepartmentDTO.class));
-        }
+        Page<Department> pageDepartment = departmentRepository.findAll(where, pageable);
+
+        Page<DepartmentDTO> departmentDTOS = pageDepartment.map(department -> new DepartmentDTO(department));
+//        for (Department department: pageDepartmentDTO){
+//            departmentDTOS.add(modelMapper.map(department,DepartmentDTO.class));
+//        }
         return departmentDTOS;
     }
 

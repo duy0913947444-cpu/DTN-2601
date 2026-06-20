@@ -4,7 +4,7 @@ import com.vti.From.AccountFrom;
 import com.vti.From.AccountSearchFrom;
 import com.vti.Service.IAccountService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.AnnotationConfigUtils;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +17,8 @@ public class AccountController {
 
     //crud
     @GetMapping
-    public ResponseEntity<?> findAll(AccountSearchFrom accountSearchFrom) {
-        return new ResponseEntity<>(accountService.findAll(accountSearchFrom), HttpStatus.OK);
+    public ResponseEntity<?> findAll(Pageable pageable, AccountSearchFrom accountSearchFrom) {
+        return new ResponseEntity<>(accountService.findAll(pageable ,accountSearchFrom), HttpStatus.OK);
     }
 
     @PostMapping

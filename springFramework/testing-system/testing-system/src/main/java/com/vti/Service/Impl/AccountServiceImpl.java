@@ -16,11 +16,11 @@ import jakarta.transaction.Transactional;
 import org.apache.commons.lang3.StringUtils;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 @Service
@@ -35,7 +35,7 @@ public class AccountServiceImpl implements IAccountService {
     private IPositionRepository positionRepository;
 
     @Override
-    public List<AccountDTO> findAll(AccountSearchFrom accountSearchFrom) {
+    public Page<AccountDTO> findAll(Pageable pageable , AccountSearchFrom accountSearchFrom) {
         Specification<Account> where = Specification.unrestricted(); // where 1=1
         if(StringUtils.isNotEmpty(accountSearchFrom.getUserName())){
             AccountCustomSpecification userName = new AccountCustomSpecification(
@@ -62,12 +62,12 @@ public class AccountServiceImpl implements IAccountService {
                     "positionname", accountSearchFrom.getPositionName());
             where = where.and(positionName);
         }
-        List<Account> accountList = accountRepository.findAll(where);
-        List<AccountDTO> accountDTOList = new ArrayList<>();
-        for (Account account: accountList){
-            accountDTOList.add(modelMapper.map(account, AccountDTO.class));
-        }
-        return accountDTOList;
+        Page<Account> pageAccount = accountRepository.findAll(where, pageable);
+        Page<AccountDTO> pageDTO = pageAccount.map(account -> new AccountDTO(account));
+//        for (Account account: accountList){
+//            accountDTOList.add(modelMapper.map(account, AccountDTO.class));
+//        }
+        return pageDTO;
     }
 
     @Override

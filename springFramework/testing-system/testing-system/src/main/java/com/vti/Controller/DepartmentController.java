@@ -5,6 +5,7 @@ import com.vti.From.DepartmentFrom;
 import com.vti.From.DepartmentSearchFrom;
 import com.vti.Service.IDepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +18,8 @@ public class DepartmentController {
     private IDepartmentService departmentService;
 
     @GetMapping
-    public ResponseEntity<?> findAll(DepartmentSearchFrom departmentSearchFrom){
-        return new ResponseEntity<>(departmentService.findAll(departmentSearchFrom), HttpStatus.OK);
+    public ResponseEntity<?> findAll(Pageable pageable, DepartmentSearchFrom departmentSearchFrom){
+        return new ResponseEntity<>(departmentService.findAll(pageable ,departmentSearchFrom), HttpStatus.OK);
     }
     @GetMapping(value = "/{id}")
     public ResponseEntity<?> findByID(@PathVariable(name = "id") Integer id){
